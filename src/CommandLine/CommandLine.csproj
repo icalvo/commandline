@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>CommandLine</AssemblyName>
 		<OutputType>Library</OutputType>
-		<TargetFrameworks>netstandard2.0;net40;net45;net461</TargetFrameworks>
+		<TargetFrameworks>net7.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);CSX_EITHER_INTERNAL;CSX_REM_EITHER_BEYOND_2;CSX_ENUM_INTERNAL;ERRH_INTERNAL;CSX_MAYBE_INTERNAL;CSX_REM_EITHER_FUNC;CSX_REM_CRYPTORAND;ERRH_ADD_MAYBE_METHODS</DefineConstants>
 		<DefineConstants Condition="'$(BuildTarget)' != 'fsharp'">$(DefineConstants);SKIP_FSHARP</DefineConstants>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -41,7 +41,12 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' != 'net40' and '$(BuildTarget)' == 'fsharp'">
-		<PackageReference Include="FSharp.Core" Version="4.5.1" Condition="'$(BuildTarget)' == 'fsharp'" />
+		<PackageReference Include="FSharp.Core" Version="4.5.1" Condition="'$(BuildTarget)' == 'fsharp'"/>
+		<PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1"/>
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net40' and '$(BuildTarget)' == 'fsharp'">
 		<PackageReference Include="FSharp.Core" Version="4.0.0.1" Condition="'$(BuildTarget)' == 'fsharp'" />
