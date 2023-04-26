@@ -1,18 +1,14 @@
 // Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
-using Microsoft.FSharp.Core;
-using CommandLine.Core;
-using CommandLine.Infrastructure;
-using CommandLine.Tests.Fakes;
-
-using CSharpx;
-
-using FluentAssertions;
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using CommandLine.Core;
+using CommandLine.Infrastructure;
+using CommandLine.Tests.Fakes;
+using CSharpx;
+using FluentAssertions;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core
@@ -23,7 +19,7 @@ namespace CommandLine.Tests.Unit.Core
             where T : new()
         {
             return InstanceBuilder.Build(
-                Maybe.Just<Func<T>>(() => new T()),
+                Maybe.Just(() => new T()),
                 (args, optionSpecs) => Tokenizer.ConfigureTokenizer(StringComparer.Ordinal, false, false)(args, optionSpecs),
                 arguments,
                 StringComparer.Ordinal,
@@ -916,6 +912,20 @@ namespace CommandLine.Tests.Unit.Core
         }
 
         [Theory]
+        [MemberData(nameof(ImmutableUnsortedInstanceData))]
+        public void Parse_to_immutable_instance_with_unsorted_properties(string[] arguments,
+            Immutable_Simple_Options_Unsorted expected)
+        {
+            // Fixture setup in attributes
+
+            // Exercize system 
+            var result = InvokeBuildImmutable<Immutable_Simple_Options_Unsorted>(arguments);
+
+            // Verify outcome
+            expected.Should().BeEquivalentTo(((Parsed<Immutable_Simple_Options_Unsorted>)result).Value);
+        }
+
+        [Theory]
         [MemberData(nameof(ImmutableInstanceDataArgs))]
         [Trait("Category", "Immutable")]
         public void Parse_to_immutable_instance_with_Invalid_Ctor_Args(string[] arguments)
@@ -928,7 +938,7 @@ namespace CommandLine.Tests.Unit.Core
 
             // Verify outcome
             var expectedMsg =
-                "Type CommandLine.Tests.Fakes.Immutable_Simple_Options_Invalid_Ctor_Args appears to be Immutable with invalid constructor. Check that constructor arguments have the same name and order of their underlying Type.  Constructor Parameters can be ordered as: '(stringvalue, intsequence, boolvalue, longvalue)'";
+                "Type CommandLine.Tests.Fakes.Immutable_Simple_Options_Invalid_Ctor_Args appears to be Immutable with invalid constructor. Check that constructor parameters have the following names and types (in any order): String stringValue, IEnumerable<Int32> intSequence, Boolean boolValue, Int64 longValue";
             act.Should().Throw<InvalidOperationException>().WithMessage(expectedMsg);
         }
 
@@ -1108,7 +1118,11 @@ namespace CommandLine.Tests.Unit.Core
         [Fact]
         public void OptionClass_IsImmutable_HasNoCtor()
         {
-            Action act = () => InvokeBuild<ValueWithNoSetterOptions>(new string[] { "Test" }, false, false);
+            Action act = () =>
+            {
+                var x = InvokeBuild<ValueWithNoSetterOptions>(new[] { "33" }, false, false);
+                Assert.True(true);
+            };
 
             act.Should().Throw<InvalidOperationException>()
                 .Which.Message.Should().Be("Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be immutable, but no constructor found to accept values.");
@@ -1359,6 +1373,41 @@ namespace CommandLine.Tests.Unit.Core
                 yield return new object[] { new[] { "--stringvalue=strval0", "-i", "9", "7", "8", "-x", "9876543210" }, new Immutable_Simple_Options("strval0", new[] { 9, 7, 8 }, true, 9876543210L) };
             }
         }
+
+        public static IEnumerable<object[]> ImmutableUnsortedInstanceData
+        {
+            get
+            {
+                yield return new object[]
+                {
+                    new string[] { }, new Immutable_Simple_Options_Unsorted(new int[] { }, default, null, default)
+                };
+                yield return new object[]
+                {
+                    new[] { "--stringvalue=strval0" },
+                    new Immutable_Simple_Options_Unsorted(new int[] { }, default, "strval0", default)
+                };
+                yield return new object[]
+                {
+                    new[] { "-i", "9", "7", "8" },
+                    new Immutable_Simple_Options_Unsorted(new[] { 9, 7, 8 }, default, null, default)
+                };
+                yield return new object[]
+                {
+                    new[] { "-x" }, new Immutable_Simple_Options_Unsorted(new int[] { }, true, null, default)
+                };
+                yield return new object[]
+                {
+                    new[] { "9876543210" },
+                    new Immutable_Simple_Options_Unsorted(new int[] { }, default, null, 9876543210L)
+                };
+                yield return new object[]
+                {
+                    new[] { "--stringvalue=strval0", "-i", "9", "7", "8", "-x", "9876543210" },
+                    new Immutable_Simple_Options_Unsorted(new[] { 9, 7, 8 }, true, "strval0", 9876543210L)
+                };
+            }
+        }        
         public static IEnumerable<object[]> ImmutableInstanceDataArgs
         {
             get

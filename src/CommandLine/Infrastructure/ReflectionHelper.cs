@@ -82,23 +82,88 @@ namespace CommandLine.Infrastructure
                 "Microsoft.FSharp.Core.FSharpOption`1", StringComparison.Ordinal);
         }
 
-        public static T CreateDefaultImmutableInstance<T>(Type[] constructorTypes)
+        public static T CreateDefaultImmutableInstance<T>(PropertyInfo[] constructorTypes)
         {
             var t = typeof(T);
             return (T)CreateDefaultImmutableInstance(t, constructorTypes);
         }
 
-        public static object CreateDefaultImmutableInstance(Type type, Type[] constructorTypes)
+        public static IEnumerable<(PropertyInfo, Maybe<ParameterInfo>)> Matches(MethodBase c,
+            PropertyInfo[] constructorTypes)
         {
-            var ctor = type.GetTypeInfo().GetConstructor(constructorTypes);
-            if (ctor == null)
-            {
-                throw new InvalidOperationException($"Type {type.FullName} appears to be immutable, but no constructor found to accept values.");
-            }
+            var parameters = c.GetParameters();
+            if (parameters.Length != constructorTypes.Length)
+                return Enumerable.Empty<(PropertyInfo, Maybe<ParameterInfo>)>();
+
+            var parametersDic = parameters.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+
+            return constructorTypes.Select(ct => (ct, parametersDic.TryGetValue(ct.Name)));
+        }
+
+        public static bool IsMatch(MethodBase c, PropertyInfo[] constructorTypes)
+        {
+            var matches = Matches(c, constructorTypes);
+            return matches.Any() && matches.All(x => x.Item2.IsJust());
+        }
+
+        public static object CreateDefaultImmutableInstance(Type type, PropertyInfo[] constructorTypes)
+        {
+            ConstructorInfo ctor = GetMatchingConstructor(type, constructorTypes);
 
             var values = (from prms in ctor.GetParameters()
                           select prms.ParameterType.CreateDefaultForImmutable()).ToArray();
             return ctor.Invoke(values);
+        }
+
+        private static string GetCSharpRepresentation(Type t)
+        {
+            if (!t.IsGenericType) return t.Name;
+            var genericArgs = t.GetGenericArguments().ToList();
+            return GetCSharpRepresentation(t, genericArgs);
+        }
+
+        private static string GetCSharpRepresentation(Type t, IList<Type> availableArguments)
+        {
+            if (!t.IsGenericType) return t.Name;
+            var value = t.Name;
+            if (value.IndexOf("`", StringComparison.Ordinal) > -1)
+                value = value.Substring(0, value.IndexOf("`", StringComparison.Ordinal));
+
+            if (t.DeclaringType != null)
+                // This is a nested type, build the nesting type first
+                value = $"{GetCSharpRepresentation(t.DeclaringType, availableArguments)}+{value}";
+
+            // Build the type arguments (if any)
+            var argString = "";
+            var thisTypeArgs = t.GetGenericArguments();
+            for (var i = 0; i < thisTypeArgs.Length && availableArguments.Count > 0; i++)
+            {
+                if (i != 0) argString += ", ";
+
+                argString += GetCSharpRepresentation(availableArguments[0]);
+                availableArguments.RemoveAt(0);
+            }
+
+            // If there are type arguments, add them with < >
+            if (argString.Length > 0) value += $"<{argString}>";
+
+            return value;
+        }
+
+        public static ConstructorInfo GetMatchingConstructor(Type type, PropertyInfo[] constructorTypes)
+        {
+            return type.GetTypeInfo().GetConstructors().FirstOrNothing(ci => IsMatch(ci, constructorTypes))
+                .FromJustOrFail(
+                    () =>
+                    {
+                        var ctorArgs = constructorTypes.Select(
+                            x =>
+                                $"{GetCSharpRepresentation(x.PropertyType)} {char.ToLowerInvariant(x.Name[0])}{x.Name[1..]}");
+                        var ctorSyntax = string.Join(", ", ctorArgs);
+                        var msg =
+                            $"Type {type.FullName} appears to be Immutable with invalid constructor. Check that constructor parameters have the following names and types (in any order): {ctorSyntax}";
+                        return new InvalidOperationException(msg);
+                    });
         }
 
         private static Assembly GetExecutingOrEntryAssembly()

@@ -152,11 +152,7 @@ namespace CommandLine.Core
 
         public static object CreateDefaultForImmutable(this Type type)
         {
-            if (type.GetTypeInfo().IsGenericType && type.GetTypeInfo().GetGenericTypeDefinition() == typeof(IEnumerable<>))
-            {
-                return type.GetTypeInfo().GetGenericArguments()[0].CreateEmptyArray();
-            }
-            return type.GetDefaultValue();
+            return type.UnderlyingSequenceType().Match(y => y.CreateEmptyArray(), type.GetDefaultValue());
         }
 
         public static object AutoDefault(this Type type)
@@ -166,9 +162,9 @@ namespace CommandLine.Core
                 return Activator.CreateInstance(type);
             }
 
-            var ctorTypes = type.GetSpecifications(pi => pi.PropertyType).ToArray();
- 
-            return ReflectionHelper.CreateDefaultImmutableInstance(type, ctorTypes);
+            var properties = type.GetSpecifications(pi => pi).ToArray();
+
+            return ReflectionHelper.CreateDefaultImmutableInstance(type, properties);
         }
 
         public static TypeInfo ToTypeInfo(this Type type)

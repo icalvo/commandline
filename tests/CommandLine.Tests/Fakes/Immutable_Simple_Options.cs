@@ -31,7 +31,30 @@ namespace CommandLine.Tests.Fakes
         [Value(0)]
         public long LongValue { get { return longValue; } }
     }
-   
+
+    public class Immutable_Simple_Options_Unsorted
+    {
+        public Immutable_Simple_Options_Unsorted(IEnumerable<int> intSequence, bool boolValue, string stringValue,
+            long longValue)
+        {
+            this.StringValue = stringValue;
+            this.IntSequence = intSequence;
+            this.BoolValue = boolValue;
+            this.LongValue = longValue;
+        }
+
+        [Option(HelpText = "Define a string value here.")]
+        public string StringValue { get; }
+
+        [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
+        public IEnumerable<int> IntSequence { get; }
+
+        [Option('x', HelpText = "Define a boolean or switch value here.")]
+        public bool BoolValue { get; }
+
+        [Value(0)] public long LongValue { get; }
+    }
+
     public class Immutable_Simple_Options_Invalid_Ctor_Args
     {
         private readonly string stringValue;

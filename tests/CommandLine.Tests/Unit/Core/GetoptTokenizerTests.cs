@@ -3,11 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
-using FluentAssertions;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
 using CommandLine.Core;
+using CSharpx;
+using FluentAssertions;
+using RailwaySharp.ErrorHandling;
+using Xunit;
 
 namespace CommandLine.Tests.Unit.Core
 {
@@ -87,15 +87,15 @@ namespace CommandLine.Tests.Unit.Core
 
             var result = GetoptTokenizer.Tokenize(args, name => NameLookupResult.OtherOptionFound);
 
-            var errors = result.SuccessMessages();
+            var errors = result.SuccessMessages().ToArray();
 
             Assert.NotNull(errors);
-            Assert.Equal(1, errors.Count());
+            Assert.Single(errors);
             Assert.Equal(ErrorType.BadFormatTokenError, errors.First().Tag);
 
-            var tokens = result.SucceededWith();
+            var tokens = result.SucceededWith().ToArray();
             Assert.NotNull(tokens);
-            Assert.Equal(2, tokens.Count());
+            Assert.Equal(2, tokens.Length);
             Assert.Equal(TokenType.Name, tokens.First().Tag);
             Assert.Equal(TokenType.Value, tokens.Last().Tag);
             Assert.Equal("option2", tokens.First().Text);

@@ -65,7 +65,7 @@ namespace CommandLine.Core
                 typeof(T).IsMutable()
                     ? factory.MapValueOrDefault(f => f(), () => Activator.CreateInstance<T>())
                     : ReflectionHelper.CreateDefaultImmutableInstance<T>(
-                        (from p in specProps select p.Specification.ConversionType).ToArray());
+                        (from p in specProps select p.Property).ToArray());
 
             Func<IEnumerable<Error>, ParserResult<T>> notParsed =
                 errs => new NotParsed<T>(makeDefault().GetType().ToTypeInfo(), errs);
@@ -109,15 +109,9 @@ namespace CommandLine.Core
                 var setPropertyErrors = new List<Error>();
 
                 //build the instance, determining if the type is mutable or not.
-                T instance;
-                if(typeInfo.IsMutable() == true)
-                {
-                    instance = BuildMutable(factory, specPropsWithValue, setPropertyErrors);
-                }
-                else
-                {
-                    instance = BuildImmutable(typeInfo, factory, specProps, specPropsWithValue, setPropertyErrors);
-                }
+                T instance = typeInfo.IsMutable()
+                    ? BuildMutable(factory, specPropsWithValue, setPropertyErrors)
+                    : BuildImmutable<T>(typeInfo, specProps, specPropsWithValue, setPropertyErrors);
 
                 var validationErrors = specPropsWithValue.Validate(SpecificationPropertyRules.Lookup(tokens, allowMultiInstance));
 
@@ -182,48 +176,26 @@ namespace CommandLine.Core
             return mutable;
         }
 
-        private static T BuildImmutable<T>(Type typeInfo, Maybe<Func<T>> factory, IEnumerable<SpecificationProperty> specProps, IEnumerable<SpecificationProperty> specPropsWithValue, List<Error> setPropertyErrors)
+        private static T BuildImmutable<T>(Type typeInfo, IEnumerable<SpecificationProperty> specProps,
+            IEnumerable<SpecificationProperty> specPropsWithValue, List<Error> setPropertyErrors)
         {
-            var ctor = typeInfo.GetTypeInfo().GetConstructor(
-                specProps.Select(sp => sp.Property.PropertyType).ToArray()
-            );
-
-            if(ctor == null)
-            {
-                throw new InvalidOperationException($"Type {typeInfo.FullName} appears to be immutable, but no constructor found to accept values.");
-            }
-            try
-            {
-                var values =
-                    (from prms in ctor.GetParameters()
-                     join sp in specPropsWithValue on prms.Name.ToLower() equals sp.Property.Name.ToLower() into spv
-                     from sp in spv.DefaultIfEmpty()
-                     select
-                 sp == null
-                        ? specProps.First(s => String.Equals(s.Property.Name, prms.Name, StringComparison.CurrentCultureIgnoreCase))
+            ConstructorInfo ctor = ReflectionHelper.GetMatchingConstructor(
+                typeInfo,
+                specProps.Select(sp => sp.Property).ToArray());
+            var values = (from prms in ctor.GetParameters()
+                join sp in specPropsWithValue on prms.Name.ToLower() equals sp.Property.Name.ToLower() into spv
+                from sp in spv.DefaultIfEmpty()
+                select sp == null
+                    ? specProps.First(
+                            s => string.Equals(s.Property.Name, prms.Name, StringComparison.CurrentCultureIgnoreCase))
                         .Property.PropertyType.GetDefaultValue()
-                        : sp.Value.GetValueOrDefault(
-                            sp.Specification.DefaultValue.GetValueOrDefault(
-                                sp.Specification.ConversionType.CreateDefaultForImmutable()))).ToArray();
+                    : sp.Value.GetValueOrDefault(
+                        sp.Specification.DefaultValue.GetValueOrDefault(
+                            sp.Specification.ConversionType.CreateDefaultForImmutable()))).ToArray();
 
             var immutable = (T)ctor.Invoke(values);
 
             return immutable;
-            }
-            catch (Exception)
-            {
-                var ctorArgs = specPropsWithValue
-                    .Select(x => x.Property.Name.ToLowerInvariant()).ToArray();
-                throw GetException(ctorArgs);
-            }
-            Exception GetException(string[] s)
-            {
-                var ctorSyntax = s != null ? " Constructor Parameters can be ordered as: " + $"'({string.Join(", ", s)})'" : string.Empty;
-                var msg =
-                    $"Type {typeInfo.FullName} appears to be Immutable with invalid constructor. Check that constructor arguments have the same name and order of their underlying Type. {ctorSyntax}";
-                InvalidOperationException invalidOperationException = new InvalidOperationException(msg);
-                return invalidOperationException;
-            }
         }
 
     }
