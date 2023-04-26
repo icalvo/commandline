@@ -1,10 +1,5 @@
 // Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
-using CommandLine.Core;
-using CommandLine.Infrastructure;
-
-using CSharpx;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CommandLine.Core;
+using CommandLine.Infrastructure;
+using CSharpx;
 
 namespace CommandLine.Text
 {
@@ -369,7 +367,7 @@ namespace CommandLine.Text
                 .Do(license => license.AddToHelpText(auto, true));
 
             var usageAttr = ReflectionHelper.GetAttribute<AssemblyUsageAttribute>();
-            var usageLines = HelpText.RenderUsageTextAsLines(parserResult, onExample).ToMaybe();
+            var usageLines = RenderUsageTextAsLines(parserResult, onExample).ToMaybe();
 
             if (usageAttr.IsJust() || usageLines.IsJust())
             {
@@ -754,6 +752,7 @@ namespace CommandLine.Text
                                 config.GroupSwitches = s.GroupSwitches;
                                 config.UseEqualToken = s.UseEqualToken;
                                 config.SkipDefault = s.SkipDefault;
+                                config.HideDefaultVerb = s.HideDefaultVerb;
                             }));
                     yield return commandLine.ToString();
                 }

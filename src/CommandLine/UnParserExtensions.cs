@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CommandLine.Core;
@@ -21,6 +20,7 @@ namespace CommandLine
         private bool useEqualToken;
         private bool showHidden;
         private bool skipDefault;
+        private bool hideDefaultVerb;
 
         /// <summary>
         /// Gets or sets a value indicating whether unparsing process shall prefer short or long names.
@@ -65,6 +65,16 @@ namespace CommandLine
             get { return skipDefault; }
             set { PopsicleSetter.Set(Consumed, ref skipDefault, value); }
         }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether to hide the verb if it is the default one.
+        /// </summary>
+        public bool HideDefaultVerb
+        {
+            get => hideDefaultVerb;
+            set => PopsicleSetter.Set(Consumed, ref hideDefaultVerb, value);
+        }
+
         /// <summary>
         /// Factory method that creates an instance of <see cref="CommandLine.UnParserSettings"/> with GroupSwitches set to true.
         /// </summary>
@@ -135,8 +145,11 @@ namespace CommandLine
             var type = options.GetType();
             var builder = new StringBuilder();
 
-            type.GetVerbSpecification()
-                .MapValueOrDefault(verb => builder.Append(verb.Name).Append(' '), builder);
+            type.GetVerbSpecification().MapValueOrDefault(
+                verb => verb.IsDefault && settings.HideDefaultVerb
+                    ? builder
+                    : builder.AppendWhen(!verb.IsDefault, verb.Name).AppendWhen(!verb.IsDefault, ' '),
+                builder);
 
             var specs =
                 (from info in
