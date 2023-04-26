@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using CommandLine.Infrastructure;
 using CSharpx;
 using RailwaySharp.ErrorHandling;
-using System.Reflection;
 
 namespace CommandLine.Core
 {
@@ -176,8 +176,7 @@ namespace CommandLine.Core
                     sp => sp.Value.IsNothing() 
                         && sp.Specification.TargetType == TargetType.Sequence 
                         && sp.Specification.DefaultValue.MatchNothing(),
-                    sp => sp.Property.PropertyType.GetTypeInfo().GetGenericArguments().Single().CreateEmptyArray()
-                )
+                    sp => sp.Property.PropertyType.UnderlyingSequenceType().FromJustOrFail().CreateEmptyArray())
             );
 
             return mutable;

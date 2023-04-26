@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSharpx;
-using System.Reflection;
 
 namespace CommandLine.Core
 {
@@ -29,11 +28,10 @@ namespace CommandLine.Core
             switch (specProp.Specification.TargetType)
             {
                 case TargetType.Sequence:
-                    return specProp.Property.PropertyType.GetTypeInfo().GetGenericArguments()
-                             .SingleOrDefault()
-                             .ToMaybe()
+                    return specProp.Property.PropertyType.UnderlyingSequenceType()
                              .FromJustOrFail(
-                                 new InvalidOperationException("Sequence properties should be of type IEnumerable<T>."));
+                                 new InvalidOperationException(
+                                     "Sequence properties should be of type IEnumerable<T> or T[]."));
                 default:
                     return specProp.Property.PropertyType;
             }

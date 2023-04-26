@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using CommandLine.Infrastructure;
 using CSharpx;
 using RailwaySharp.ErrorHandling;
-using System.Reflection;
 
 namespace CommandLine.Core
 {
@@ -24,11 +24,7 @@ namespace CommandLine.Core
 
         private static Maybe<object> ChangeTypeSequence(IEnumerable<string> values, Type conversionType, CultureInfo conversionCulture, bool ignoreValueCase)
         {
-            var type =
-                conversionType.GetTypeInfo()
-                              .GetGenericArguments()
-                              .SingleOrDefault()
-                              .ToMaybe()
+            Type type = conversionType.UnderlyingSequenceType()
                               .FromJustOrFail(
                                   new InvalidOperationException("Non scalar properties should be sequence of type IEnumerable<T>.")
                     );
