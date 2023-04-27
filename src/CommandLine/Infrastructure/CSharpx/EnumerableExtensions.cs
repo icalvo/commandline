@@ -92,16 +92,6 @@ namespace CSharpx
         }
 
         /// <summary>
-        /// Prepends a single value to a sequence.
-        /// </summary>
-        public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource value)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-
-            return LinqEnumerable.Concat(LinqEnumerable.Repeat(value, 1), source);
-        }
-
-        /// <summary>
         /// Returns a sequence consisting of the head element and the given tail elements.
         /// </summary>
         public static IEnumerable<T> Concat<T>(this T head, IEnumerable<T> tail)

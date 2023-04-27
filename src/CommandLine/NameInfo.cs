@@ -102,10 +102,7 @@ namespace CommandLine
         /// Serves as a hash function for a particular type.
         /// </summary>
         /// <remarks>A hash code for the current <see cref="System.Object"/>.</remarks>
-        public override int GetHashCode()
-        {
-            return CSharpx.EnumerableExtensions.Prepend(LongNames, ShortName).ToArray().GetHashCode();
-        }
+        public override int GetHashCode() => LongNames.Prepend(ShortName).ToArray().GetHashCode();
 
         /// <summary>
         /// Returns a value that indicates whether the current instance and a specified <see cref="CommandLine.NameInfo"/> have the same value.
