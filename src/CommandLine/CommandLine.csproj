@@ -49,13 +49,16 @@
 		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1"/>
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net40' and '$(BuildTarget)' == 'fsharp'">
-		<PackageReference Include="FSharp.Core" Version="4.0.0.1" Condition="'$(BuildTarget)' == 'fsharp'" />
+		<PackageReference Include="FSharp.Core" Version="4.0.0.1" Condition="'$(BuildTarget)' == 'fsharp'"/>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\..\License.md" Pack="true" PackagePath="$(PackageLicenseFile)" />
-		<None Include="..\..\art\CommandLine20.png" Pack="true" PackagePath="$(PackageIcon)" />
+		<None Include="..\..\License.md" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+		<None Include="..\..\art\CommandLine20.png" Pack="true" PackagePath="$(PackageIcon)"/>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Infrastructure\CSharpx\" />
+		<Folder Include="Infrastructure\CSharpx\"/>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JetBrains.Annotations" Version="2022.1.0"/>
 	</ItemGroup>
 </Project>
