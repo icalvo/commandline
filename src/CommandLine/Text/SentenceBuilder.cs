@@ -1,11 +1,10 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
-using CommandLine.Infrastructure;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CommandLine.Infrastructure;
 
 namespace CommandLine.Text
 {
@@ -163,7 +162,9 @@ namespace CommandLine.Text
                                     return "Both SetName and Group are not allowed in option: (".JoinTo(groupOptionAmbiguityError.Option.NameText, ")");
                                 case ErrorType.MultipleDefaultVerbsError:
                                     return MultipleDefaultVerbsError.ErrorMessage;
-
+                                case ErrorType.HelpVerbNotFoundError:
+                                    var helpVerbNotFoundError = (HelpVerbNotFoundError)error;
+                                    return $"Cannot find help for verb '{helpVerbNotFoundError.Verb}'";
                             }
                             throw new InvalidOperationException();
                         };

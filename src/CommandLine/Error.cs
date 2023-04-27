@@ -60,7 +60,12 @@ namespace CommandLine
         /// </summary>
         HelpVerbRequestedError,
         /// <summary>
-        /// Value of <see cref="CommandLine.VersionRequestedError"/> type.
+        /// Value of <see cref="CommandLine.HelpVerbNotFoundError"/> type.
+        /// </summary>
+        HelpVerbNotFoundError,
+
+        /// <summary>
+        ///     Value of <see cref="CommandLine.VersionRequestedError" /> type.
         /// </summary>
         VersionRequestedError,
         /// <summary>
@@ -472,6 +477,19 @@ namespace CommandLine
         {
             get { return matched; }
         }
+    }
+
+    /// <summary>
+    ///     Models an error generated when a user explicitly requests help in verb commands scenario.
+    /// </summary>
+    public sealed class HelpVerbNotFoundError : Error
+    {
+        internal HelpVerbNotFoundError(string verb) : base(ErrorType.HelpVerbNotFoundError, false) => this.Verb = verb;
+
+        /// <summary>
+        ///     Verb command string.
+        /// </summary>
+        public string Verb { get; }
     }
 
     /// <summary>

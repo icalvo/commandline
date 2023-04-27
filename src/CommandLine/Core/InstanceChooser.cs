@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using CommandLine.Infrastructure;
 using CSharpx;
 using RailwaySharp.ErrorHandling;
 
@@ -145,7 +144,7 @@ namespace CommandLine.Core
                 nonFatalErrors);
         }
 
-        private static HelpVerbRequestedError MakeHelpVerbRequestedError(
+        private static Error MakeHelpVerbRequestedError(
             IEnumerable<Tuple<Verb, Type>> verbs,
             string verb,
             StringComparer nameComparer)
@@ -155,8 +154,8 @@ namespace CommandLine.Core
                         v => v.Item1.Aliases.Prepend(v.Item1.Name).Any(alias => nameComparer.Equals(alias, verb)))
                         .ToMaybe()
                         .MapValueOrDefault(
-                            v => new HelpVerbRequestedError(v.Item1.Name, v.Item2, true),
-                            new HelpVerbRequestedError(null, null, false))
+                            v => (Error)new HelpVerbRequestedError(v.Item1.Name, v.Item2, true),
+                            new HelpVerbNotFoundError(verb))
                 : new HelpVerbRequestedError(null, null, false);
         }
 
