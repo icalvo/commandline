@@ -151,7 +151,8 @@ namespace CommandLine.Core
             StringComparer nameComparer)
         {
             return verb.Length > 0
-                ? verbs.SingleOrDefault(v => nameComparer.Equals(v.Item1.Name, verb))
+                ? verbs.SingleOrDefault(
+                        v => v.Item1.Aliases.Prepend(v.Item1.Name).Any(alias => nameComparer.Equals(alias, verb)))
                         .ToMaybe()
                         .MapValueOrDefault(
                             v => new HelpVerbRequestedError(v.Item1.Name, v.Item2, true),
