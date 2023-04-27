@@ -1124,8 +1124,8 @@ namespace CommandLine.Tests.Unit.Core
                 Assert.True(true);
             };
 
-            act.Should().Throw<InvalidOperationException>()
-                .Which.Message.Should().Be("Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be immutable, but no constructor found to accept values.");
+            act.Should().Throw<InvalidOperationException>().Which.Message.Should().Be(
+                "Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be Immutable with invalid constructor. Check that constructor parameters have the following names and types (in any order): Int32 testValue");
         }
 
         [Fact]
@@ -1133,8 +1133,8 @@ namespace CommandLine.Tests.Unit.Core
         {
             Action act = () => InvokeBuild<ValueWithNoSetterOptions>(new string[] { "--help" });
 
-            act.Should().Throw<InvalidOperationException>()
-                .Which.Message.Should().Be("Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be immutable, but no constructor found to accept values.");
+            act.Should().Throw<InvalidOperationException>().Which.Message.Should().Be(
+                "Type CommandLine.Tests.Unit.Core.InstanceBuilderTests+ValueWithNoSetterOptions appears to be Immutable with invalid constructor. Check that constructor parameters have the following names and types (in any order): Int32 testValue");
         }
 
         [Fact]

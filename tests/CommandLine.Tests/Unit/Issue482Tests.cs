@@ -38,7 +38,6 @@ namespace CommandLine.Tests.Unit
                 "-f, --foxtrot",
                 "-e, --echo",
                 "--help           Display this help screen.",
-                "--version        Display version information.",
                 "value pos. 0"
             };
             expected.Count.Should().Be(helps.Count);
@@ -86,7 +85,6 @@ namespace CommandLine.Tests.Unit
                 "-e, --echo",
                 "-f, --foxtrot",
                 "--help           Display this help screen.",
-                "--version        Display version information.",
                 "value pos. 0"
             };
             expected.Count.Should().Be(helps.Count);
@@ -169,7 +167,6 @@ namespace CommandLine.Tests.Unit
                 "-e, --echo",
                 "-f, --foxtrot",
                  "--help           Display this help screen.",
-                "--version        Display version information.",
                 "value pos. 0"
             };
             expected.Count.Should().Be(helps.Count);

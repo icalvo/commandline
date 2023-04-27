@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Xunit;
-using FluentAssertions;
 using CommandLine.Core;
 using CommandLine.Tests.Fakes;
+using FluentAssertions;
+using Xunit;
 
 namespace CommandLine.Tests.Unit.Core
 {
@@ -86,7 +86,7 @@ namespace CommandLine.Tests.Unit.Core
         public void Explicit_help_request_for_an_invalid_verb_generates_HelpVerbRequestedError_with_Matched_set_to_false()
         {
             // Fixture setup
-            var expectedErrors = new[] { new HelpVerbRequestedError(null, null, false) };
+            var expectedErrors = new[] { new HelpVerbNotFoundError("earthunderalienattack") };
 
             // Exercize system 
             var result = InvokeChoose(

@@ -830,13 +830,10 @@ namespace CommandLine.Text
             var specs = type.GetSpecifications(Specification.FromProperty);
             var optionSpecs = specs
                 .OfType<OptionSpecification>();
-            if ((autoHelp || autoVersion) && !Verb.SelectFromTypes(new[] { type }).Any())
-            {
-                if (autoHelp)
-                    optionSpecs = optionSpecs.Concat(new[] { MakeHelpEntry() });
-                if (autoVersion)
-                    optionSpecs = optionSpecs.Concat(new[] { MakeVersionEntry() });
-            }
+            if (autoHelp)
+                optionSpecs = optionSpecs.Concat(new[] { MakeHelpEntry() });
+            if (autoVersion && !Verb.SelectFromTypes(new[] { type }).Any())
+                optionSpecs = optionSpecs.Concat(new[] { MakeVersionEntry() });
 
             var valueSpecs = specs
                 .OfType<ValueSpecification>()

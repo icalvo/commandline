@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Xunit;
-using FluentAssertions;
-using CommandLine.Text;
 using CommandLine.Tests.Fakes;
+using CommandLine.Text;
+using FluentAssertions;
+using Xunit;
 
 namespace CommandLine.Tests.Unit
 {
@@ -580,8 +580,7 @@ namespace CommandLine.Tests.Unit
             lines[12].Should().BeEquivalentTo("filesystem by copying files.");
             lines[13].Should().BeEquivalentTo("-q, --quiet       Suppress summary message.");
             lines[14].Should().BeEquivalentTo("--help            Display this help screen.");
-            lines[15].Should().BeEquivalentTo("--version         Display version information.");
-            lines[16].Should().BeEquivalentTo("URLS (pos. 0)     A list of url(s) to clone.");
+            lines[15].Should().BeEquivalentTo("URLS (pos. 0)     A list of url(s) to clone.");
 
             // Teardown
         }
@@ -627,7 +626,6 @@ namespace CommandLine.Tests.Unit
             lines[1].Should().Be(CopyrightInfo.Default.ToString());
             lines[2].Should().BeEquivalentTo("-f, --force    Allow adding otherwise ignored files.");
             lines[3].Should().BeEquivalentTo("--help         Display this help screen.");
-            lines[4].Should().BeEquivalentTo("--version      Display version information.");
 
             // Teardown
         }
@@ -695,8 +693,7 @@ namespace CommandLine.Tests.Unit
             lines[3].Should().BeEquivalentTo("filesystem by copying files.");
             lines[4].Should().BeEquivalentTo("-q, --quiet       Suppress summary message.");
             lines[5].Should().BeEquivalentTo("--help            Display this help screen.");
-            lines[6].Should().BeEquivalentTo("--version         Display version information.");
-            lines[7].Should().BeEquivalentTo("value pos. 0");
+            lines[6].Should().BeEquivalentTo("value pos. 0");
 
             // Teardown
         }
@@ -765,8 +762,7 @@ namespace CommandLine.Tests.Unit
             lines[5].Should().BeEquivalentTo("filesystem by copying files.");
             lines[6].Should().BeEquivalentTo("-q, --quiet       Suppress summary message.");
             lines[7].Should().BeEquivalentTo("--help            Display this help screen.");
-            lines[8].Should().BeEquivalentTo("--version         Display version information.");
-            lines[9].Should().BeEquivalentTo("value pos. 0");
+            lines[8].Should().BeEquivalentTo("value pos. 0");
 
             // Teardown
         }

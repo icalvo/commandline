@@ -105,19 +105,16 @@ namespace CommandLine.Tests.Unit
             {
                 "-a, --alpha    Required.",
                 "--help         Display this help screen.",
-                "--version      Display version information.",
             })]
         [InlineData("mv --help", false, new string[]
             {
                 "-a, --alpha    Required.",
                 "--help         Display this help screen.",
-                "--version      Display version information.",
             })]
         [InlineData("delete --help", false, new string[]
             {
                 "-b, --beta    Required.",
                 "--help        Display this help screen.",
-                "--version     Display version information.",
             })]
         public void Parse_help_option_for_aliased_verbs(string args, bool verbsIndex, string[] expected)
         {
@@ -178,19 +175,16 @@ namespace CommandLine.Tests.Unit
             {
                 "-a, --alpha    Required.",
                 "--help         Display this help screen.",
-                "--version      Display version information.",
             })]
         [InlineData("mv --help", false, new string[]
             {
                 "-a, --alpha    Required.",
                 "--help         Display this help screen.",
-                "--version      Display version information.",
             })]
         [InlineData("delete --help", false, new string[]
             {
                 "-b, --beta    Required.",
                 "--help        Display this help screen.",
-                "--version     Display version information.",
             })]
         public void Parse_help_option_for_aliased_verbs_no_default(string args, bool verbsIndex, string[] expected)
         {
