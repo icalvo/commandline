@@ -3,6 +3,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace CommandLine.Infrastructure
 {
@@ -18,16 +19,19 @@ namespace CommandLine.Infrastructure
             return Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
+        [StringFormatMethod("value")]
         public static string ToStringLocal<T>(this T value)
         {
             return Convert.ToString(value, CultureInfo.CurrentCulture);
         }
 
+        [StringFormatMethod("value")]
         public static string FormatInvariant(this string value, params object[] arguments)
         {
             return string.Format(CultureInfo.InvariantCulture, value, arguments);
         }
 
+        [StringFormatMethod("value")]
         public static string FormatLocal(this string value, params object[] arguments)
         {
             return string.Format(CultureInfo.CurrentCulture, value, arguments);
