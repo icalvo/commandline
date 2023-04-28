@@ -1,39 +1,35 @@
 ﻿using System.IO;
-using Xunit;
 using FluentAssertions;
+using Xunit;
 
-namespace CommandLine.Tests.Unit
+namespace CommandLine.Tests.Unit;
+
+public class ParserSettingsTests
 {
-    public class ParserSettingsTests
+    public class DisposeTrackingStringWriter : StringWriter
     {
-        public class DisposeTrackingStringWriter : StringWriter
+        public DisposeTrackingStringWriter() => Disposed = false;
+
+        public bool Disposed { get; private set; }
+
+        protected override void Dispose(bool disposing)
         {
-            public DisposeTrackingStringWriter()
-            {
-                Disposed = false;
-            }
-
-            public bool Disposed { get; private set; }
-
-            protected override void Dispose(bool disposing)
-            {
-                Disposed = true;
-                base.Dispose(disposing);
-            }
+            Disposed = true;
+            base.Dispose(disposing);
         }
+    }
 
-        [Fact]
-        public void Disposal_does_not_dispose_HelpWriter()
+    [Fact]
+    public void Disposal_does_not_dispose_HelpWriter()
+    {
+        using (var textWriter = new DisposeTrackingStringWriter())
         {
-            using (DisposeTrackingStringWriter textWriter = new DisposeTrackingStringWriter())
+            using (var parserSettings = new ParserSettings())
             {
-                using (ParserSettings parserSettings = new ParserSettings())
-                {
-                    parserSettings.HelpWriter = textWriter;
-                }
-
-                textWriter.Disposed.Should().BeFalse("not disposed");
+                parserSettings.HelpWriter = textWriter;
             }
+
+            textWriter.Disposed.Should().BeFalse("not disposed");
         }
     }
 }

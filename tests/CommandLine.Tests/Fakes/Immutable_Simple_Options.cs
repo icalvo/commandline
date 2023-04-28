@@ -2,84 +2,72 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+public class Immutable_Simple_Options
 {
-    public class Immutable_Simple_Options
+    public Immutable_Simple_Options(string stringValue, IEnumerable<int> intSequence, bool boolValue, long longValue)
     {
-        private readonly string stringValue;
-        private readonly IEnumerable<int> intSequence;
-        private readonly bool boolValue;
-        private readonly long longValue;
-
-        public Immutable_Simple_Options(string stringValue, IEnumerable<int> intSequence, bool boolValue, long longValue)
-        {
-            this.stringValue = stringValue;
-            this.intSequence = intSequence;
-            this.boolValue = boolValue;
-            this.longValue = longValue;
-        }
-
-        [Option(HelpText = "Define a string value here.")]
-        public string StringValue { get { return stringValue; } }
-
-        [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
-        public IEnumerable<int> IntSequence { get { return intSequence; } }
-
-        [Option('x', HelpText = "Define a boolean or switch value here.")]
-        public bool BoolValue { get { return boolValue; } }
-
-        [Value(0)]
-        public long LongValue { get { return longValue; } }
+        this.StringValue = stringValue;
+        this.IntSequence = intSequence;
+        this.BoolValue = boolValue;
+        this.LongValue = longValue;
     }
 
-    public class Immutable_Simple_Options_Unsorted
+    [Option(HelpText = "Define a string value here.")]
+    public string StringValue { get; }
+
+    [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
+    public IEnumerable<int> IntSequence { get; }
+
+    [Option('x', HelpText = "Define a boolean or switch value here.")]
+    public bool BoolValue { get; }
+
+    [Value(0)] public long LongValue { get; }
+}
+
+public class Immutable_Simple_Options_Unsorted
+{
+    public Immutable_Simple_Options_Unsorted(IEnumerable<int> intSequence, bool boolValue, string stringValue,
+        long longValue)
     {
-        public Immutable_Simple_Options_Unsorted(IEnumerable<int> intSequence, bool boolValue, string stringValue,
-            long longValue)
-        {
-            this.StringValue = stringValue;
-            this.IntSequence = intSequence;
-            this.BoolValue = boolValue;
-            this.LongValue = longValue;
-        }
-
-        [Option(HelpText = "Define a string value here.")]
-        public string StringValue { get; }
-
-        [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
-        public IEnumerable<int> IntSequence { get; }
-
-        [Option('x', HelpText = "Define a boolean or switch value here.")]
-        public bool BoolValue { get; }
-
-        [Value(0)] public long LongValue { get; }
+        StringValue = stringValue;
+        IntSequence = intSequence;
+        BoolValue = boolValue;
+        LongValue = longValue;
     }
 
-    public class Immutable_Simple_Options_Invalid_Ctor_Args
+    [Option(HelpText = "Define a string value here.")]
+    public string StringValue { get; }
+
+    [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
+    public IEnumerable<int> IntSequence { get; }
+
+    [Option('x', HelpText = "Define a boolean or switch value here.")]
+    public bool BoolValue { get; }
+
+    [Value(0)] public long LongValue { get; }
+}
+
+public class Immutable_Simple_Options_Invalid_Ctor_Args
+{
+    public Immutable_Simple_Options_Invalid_Ctor_Args(string stringValue1, IEnumerable<int> intSequence2,
+        bool boolValue, long longValue)
     {
-        private readonly string stringValue;
-        private readonly IEnumerable<int> intSequence;
-        private readonly bool boolValue;
-        private readonly long longValue;
-
-        public Immutable_Simple_Options_Invalid_Ctor_Args(string stringValue1, IEnumerable<int> intSequence2, bool boolValue, long longValue)
-        {
-            this.stringValue = stringValue1;
-            this.intSequence = intSequence2;
-            this.boolValue = boolValue;
-            this.longValue = longValue;
-        }
-
-        [Option(HelpText = "Define a string value here.")]
-        public string StringValue { get { return stringValue; } }
-
-        [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
-        public IEnumerable<int> IntSequence { get { return intSequence; } }
-
-        [Option('x', HelpText = "Define a boolean or switch value here.")]
-        public bool BoolValue { get { return boolValue; } }
-
-        [Value(0)]
-        public long LongValue { get { return longValue; } }
+        StringValue = stringValue1;
+        IntSequence = intSequence2;
+        this.BoolValue = boolValue;
+        this.LongValue = longValue;
     }
+
+    [Option(HelpText = "Define a string value here.")]
+    public string StringValue { get; }
+
+    [Option('i', Min = 3, Max = 4, HelpText = "Define a int sequence here.")]
+    public IEnumerable<int> IntSequence { get; }
+
+    [Option('x', HelpText = "Define a boolean or switch value here.")]
+    public bool BoolValue { get; }
+
+    [Value(0)] public long LongValue { get; }
 }

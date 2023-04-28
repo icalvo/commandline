@@ -2,11 +2,9 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Min_Set_To_Zero
 {
-    class Options_With_Min_Set_To_Zero
-    {
-        [Option(Min=0)]
-        public IEnumerable<int> BadIntSequence { get; set; }
-    }
+    [Option(Min = 0)] public IEnumerable<int> BadIntSequence { get; set; }
 }

@@ -2,11 +2,9 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Max_Set_To_Zero
 {
-    class Options_With_Max_Set_To_Zero
-    {
-        [Option(Max=0)]
-        public IEnumerable<string> BadStringSequence { get; set; }
-    }
+    [Option(Max = 0)] public IEnumerable<string> BadStringSequence { get; set; }
 }

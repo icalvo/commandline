@@ -4,23 +4,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CommandLine.Tests
+namespace CommandLine.Tests;
+
+internal static class StringExtensions
 {
-    static class StringExtensions
+    public static string[] ToNotEmptyLines(this string value)
     {
-        public static string[] ToNotEmptyLines(this string value)
-        {
-            return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-        }
+        return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+    }
 
-        public static string[] ToLines(this string value)
-        {
-            return value.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-        }
+    public static string[] ToLines(this string value)
+    {
+        return value.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+    }
 
-        public static string[] TrimStringArray(this IEnumerable<string> array)
-        {
-            return array.Select(item => item.Trim()).ToArray();
-        }
+    public static string[] TrimStringArray(this IEnumerable<string> array)
+    {
+        return array.Select(item => item.Trim()).ToArray();
     }
 }

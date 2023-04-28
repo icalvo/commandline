@@ -2,24 +2,22 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CSharpx;
 
-namespace CommandLine.Core
+namespace CommandLine.Core;
+
+internal static class PartitionExtensions
 {
-    static class PartitionExtensions
+    public static Tuple<IEnumerable<T>, IEnumerable<T>> PartitionByPredicate<T>(this IEnumerable<T> items,
+        Func<T, bool> pred)
     {
-        public static Tuple<IEnumerable<T>,IEnumerable<T>> PartitionByPredicate<T>(
-            this IEnumerable<T> items,
-            Func<T, bool> pred)
+        var yes = new List<T>();
+        var no = new List<T>();
+        foreach (T item in items)
         {
-            List<T> yes = new List<T>();
-            List<T> no = new List<T>();
-            foreach (T item in items) {
-                List<T> list = pred(item) ? yes : no;
-                list.Add(item);
-            }
-            return Tuple.Create<IEnumerable<T>,IEnumerable<T>>(yes, no);
+            var list = pred(item) ? yes : no;
+            list.Add(item);
         }
+
+        return Tuple.Create<IEnumerable<T>, IEnumerable<T>>(yes, no);
     }
 }

@@ -2,14 +2,13 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
-{
-    class Options_With_Sequence
-    {
-        [Option("int-seq")]
-        public IEnumerable<int> IntSequence { get; set; }
+namespace CommandLine.Tests.Fakes;
 
-        //[Option("string-seq")]
-        //public IEnumerable<string> StringSequence { get; set; } 
-    }
+class Options_With_Sequence
+{
+    [Option("int-seq")]
+    public IEnumerable<int> IntSequence { get; set; }
+
+    //[Option("string-seq")]
+    //public IEnumerable<string> StringSequence { get; set; } 
 }

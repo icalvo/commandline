@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommandLine.Tests.Fakes
 {
@@ -21,12 +17,9 @@ namespace CommandLine.Tests.Fakes
         }
     }
 
-    class Options_With_Uri_And_SimpleType
+    internal class Options_With_Uri_And_SimpleType
     {
-        [Option]
-        public Uri EndPoint { get; set; }
+        [Option] public Uri EndPoint { get; set; }
 
-        [Value(0)]
-        public MySimpleType MyValue { get; set; }
-    }
+        [Value(0)] public MySimpleType MyValue { get; set; }
 }

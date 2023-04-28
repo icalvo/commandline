@@ -2,17 +2,16 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Default_Set_To_Sequence
 {
-    class Options_With_Default_Set_To_Sequence
-    {
-        [Option('z', "strseq", Default = new[] { "a", "b", "c" })]
-        public IEnumerable<string> StringSequence { get; set; }
+    [Option('z', "strseq", Default = new[] { "a", "b", "c" })]
+    public IEnumerable<string> StringSequence { get; set; }
 
-        [Option('y', "intseq", Default = new[] { 1, 2, 3 })]
-        public IEnumerable<int> IntSequence { get; set; }
+    [Option('y', "intseq", Default = new[] { 1, 2, 3 })]
+    public IEnumerable<int> IntSequence { get; set; }
 
-        [Option('q', "dblseq", Default = new[] { 1.1, 2.2, 3.3 })]
-        public IEnumerable<int> DoubleSequence { get; set; }
-    }
+    [Option('q', "dblseq", Default = new[] { 1.1, 2.2, 3.3 })]
+    public IEnumerable<int> DoubleSequence { get; set; }
 }

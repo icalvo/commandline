@@ -2,44 +2,36 @@
 
 using System;
 
-namespace CommandLine
+namespace CommandLine;
+
+/// <summary>
+///     Models an value specification, or better how to handle values not bound to options.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class ValueAttribute : BaseAttribute
 {
+    private string metaName;
+
     /// <summary>
-    /// Models an value specification, or better how to handle values not bound to options.
+    ///     Initializes a new instance of the <see cref="CommandLine.ValueAttribute" /> class.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public sealed class ValueAttribute : BaseAttribute
+    public ValueAttribute(int index)
     {
-        private readonly int index;
-        private string metaName; 
+        this.Index = index;
+        metaName = string.Empty;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.ValueAttribute"/> class.
-        /// </summary>
-        public ValueAttribute(int index) : base()
-        {
-            this.index = index;
-            this.metaName = string.Empty;
-        }
+    /// <summary>
+    ///     Gets the position this option has on the command line.
+    /// </summary>
+    public int Index { get; }
 
-        /// <summary>
-        /// Gets the position this option has on the command line.
-        /// </summary>
-        public int Index
-        {
-            get { return index; }
-        }
-
-        /// <summary>
-        /// Gets or sets name of this positional value specification.
-        /// </summary>
-        public string MetaName
-        {
-            get { return metaName; }
-            set
-            {
-                metaName = value ?? throw new ArgumentNullException("value");
-            }
-        }
+    /// <summary>
+    ///     Gets or sets name of this positional value specification.
+    /// </summary>
+    public string MetaName
+    {
+        get => metaName;
+        set => metaName = value ?? throw new ArgumentNullException("value");
     }
 }

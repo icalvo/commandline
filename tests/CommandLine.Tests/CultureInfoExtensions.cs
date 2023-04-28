@@ -4,25 +4,24 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace CommandLine.Tests
+namespace CommandLine.Tests;
+
+internal struct CultureHandlers
 {
-    struct CultureHandlers
+    public Action ChangeCulture;
+    public Action ResetCulture;
+}
+
+internal static class CultureInfoExtensions
+{
+    public static CultureHandlers MakeCultureHandlers(this CultureInfo newCulture)
     {
-        public Action ChangeCulture;
-        public Action ResetCulture;
-    }
+        CultureInfo currentCulutre = Thread.CurrentThread.CurrentCulture;
 
-    static class CultureInfoExtensions
-    {
-        public static CultureHandlers MakeCultureHandlers(this CultureInfo newCulture)
-        {
-            var currentCulutre = Thread.CurrentThread.CurrentCulture;
+        Action changer = () => Thread.CurrentThread.CurrentCulture = newCulture;
 
-            Action changer = () => Thread.CurrentThread.CurrentCulture = newCulture;
+        Action resetter = () => Thread.CurrentThread.CurrentCulture = currentCulutre;
 
-            Action resetter = () => Thread.CurrentThread.CurrentCulture = currentCulutre;
-
-            return new CultureHandlers { ChangeCulture = changer, ResetCulture = resetter };
-        }
+        return new CultureHandlers { ChangeCulture = changer, ResetCulture = resetter };
     }
 }

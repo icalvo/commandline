@@ -2,20 +2,15 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Simple_Options_With_Values
 {
-    class Simple_Options_With_Values
-    {
-        [Option(Default = "")]
-        public string StringValue { get; set; }
+    [Option(Default = "")] public string StringValue { get; set; }
 
-        [Value(0)]
-        public long LongValue { get; set; }
+    [Value(0)] public long LongValue { get; set; }
 
-        [Value(1, Min = 3, Max = 3)]
-        public IEnumerable<string> StringSequence { get; set; }
+    [Value(1, Min = 3, Max = 3)] public IEnumerable<string> StringSequence { get; set; }
 
-        [Value(2)]
-        public int IntValue { get; set; }
-    }
+    [Value(2)] public int IntValue { get; set; }
 }

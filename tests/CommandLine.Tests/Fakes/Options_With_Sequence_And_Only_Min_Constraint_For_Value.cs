@@ -2,11 +2,9 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Sequence_And_Only_Min_Constraint_For_Value
 {
-    class Options_With_Sequence_And_Only_Min_Constraint_For_Value
-    {
-        [Value(0, Min=1)]
-        public IEnumerable<string> StringSequence { get; set; }
-    }
+    [Value(0, Min = 1)] public IEnumerable<string> StringSequence { get; set; }
 }

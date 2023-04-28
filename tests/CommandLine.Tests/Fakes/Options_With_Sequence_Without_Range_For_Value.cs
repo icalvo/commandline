@@ -2,11 +2,10 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+class Options_With_Sequence_Without_Range_For_Value
 {
-    class Options_With_Sequence_Without_Range_For_Value
-    {
-        [Value(0)]
-        public IEnumerable<long> LongSequence { get; set; } 
-    }
+    [Value(0)]
+    public IEnumerable<long> LongSequence { get; set; } 
 }

@@ -1,25 +1,28 @@
-﻿namespace CommandLine.Tests.Fakes
+﻿namespace CommandLine.Tests.Fakes;
+
+public static class StaticResource
 {
-    public static class StaticResource
+    public static string HelpText => "Localized HelpText";
+}
+
+public class NonStaticResource
+{
+    public static string HelpText => "Localized HelpText";
+
+    public static string WriteOnlyText
     {
-        public static string HelpText { get { return "Localized HelpText"; } }
+        set => value?.ToString();
     }
 
-    public class NonStaticResource
-    {
-        public static string HelpText { get { return "Localized HelpText"; } }
-        public static string WriteOnlyText { set { value?.ToString(); } }
-        private static string PrivateHelpText { get { return "Localized HelpText"; } }
-    }
+    private static string PrivateHelpText => "Localized HelpText";
+}
 
-    public class NonStaticResource_WithNonStaticProperty
-    {
-        public string HelpText { get { return "Localized HelpText"; } }
-    }
+public class NonStaticResource_WithNonStaticProperty
+{
+    public string HelpText => "Localized HelpText";
+}
 
-    internal class InternalResource
-    {
-        public static string HelpText { get { return "Localized HelpText"; } }
-    }
-
+internal class InternalResource
+{
+    public static string HelpText => "Localized HelpText";
 }

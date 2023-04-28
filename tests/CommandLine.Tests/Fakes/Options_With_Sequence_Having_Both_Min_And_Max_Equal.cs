@@ -2,11 +2,9 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Sequence_Having_Both_Min_And_Max_Equal
 {
-    class Options_With_Sequence_Having_Both_Min_And_Max_Equal
-    {
-        [Value(0, Min=2, Max=2)]
-        public IEnumerable<string> StringSequence { get; set; }
-    }
+    [Value(0, Min = 2, Max = 2)] public IEnumerable<string> StringSequence { get; set; }
 }

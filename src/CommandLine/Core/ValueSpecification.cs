@@ -4,47 +4,46 @@ using System;
 using System.Collections.Generic;
 using CSharpx;
 
-namespace CommandLine.Core
+namespace CommandLine.Core;
+
+internal sealed class ValueSpecification : Specification
 {
-    sealed class ValueSpecification : Specification
+    public ValueSpecification(int index, string metaName, bool required, Maybe<int> min, Maybe<int> max,
+        Maybe<object> defaultValue, string helpText, string metaValue, IEnumerable<string> enumValues,
+        Type conversionType, TargetType targetType, bool hidden = false) : base(
+        SpecificationType.Value,
+        required,
+        min,
+        max,
+        defaultValue,
+        helpText,
+        metaValue,
+        enumValues,
+        conversionType,
+        targetType,
+        hidden)
     {
-        private readonly int index;
-        private readonly string metaName;
-
-        public ValueSpecification(int index, string metaName, bool required, Maybe<int> min, Maybe<int> max, Maybe<object> defaultValue,
-            string helpText, string metaValue, IEnumerable<string> enumValues,
-            Type conversionType, TargetType targetType, bool hidden = false)
-            : base(SpecificationType.Value, required, min, max, defaultValue, helpText, metaValue, enumValues, conversionType, targetType, hidden)
-        {
-            this.index = index;
-            this.metaName = metaName;
-        }
-
-        public static ValueSpecification FromAttribute(ValueAttribute attribute, Type conversionType, IEnumerable<string> enumValues)
-        {
-            return new ValueSpecification(
-                attribute.Index,
-                attribute.MetaName,
-                attribute.Required,
-                attribute.Min == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Min),
-                attribute.Max == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Max),
-                attribute.Default.ToMaybe(),
-                attribute.HelpText,
-                attribute.MetaValue,
-                enumValues,
-                conversionType,
-                conversionType.ToTargetType(),
-                attribute.Hidden);
-        }
-
-        public int Index
-        {
-            get { return index; }
-        }
-
-        public string MetaName
-        {
-            get { return metaName;}
-        }
+        this.Index = index;
+        this.MetaName = metaName;
     }
+
+    public static ValueSpecification
+        FromAttribute(ValueAttribute attribute, Type conversionType, IEnumerable<string> enumValues) =>
+        new(
+            attribute.Index,
+            attribute.MetaName,
+            attribute.Required,
+            attribute.Min == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Min),
+            attribute.Max == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Max),
+            attribute.Default.ToMaybe(),
+            attribute.HelpText,
+            attribute.MetaValue,
+            enumValues,
+            conversionType,
+            conversionType.ToTargetType(),
+            attribute.Hidden);
+
+    public int Index { get; }
+
+    public string MetaName { get; }
 }

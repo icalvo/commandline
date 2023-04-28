@@ -2,11 +2,9 @@
 
 using System;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+public class Options_With_TimeSpan
 {
-    public class Options_With_TimeSpan
-    {
-        [Option('d', "duration")]
-        public TimeSpan Duration { get; set; }
-    }
+    [Option('d', "duration")] public TimeSpan Duration { get; set; }
 }

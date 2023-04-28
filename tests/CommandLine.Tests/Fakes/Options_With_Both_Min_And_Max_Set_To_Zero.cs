@@ -2,11 +2,9 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Both_Min_And_Max_Set_To_Zero
 {
-    class Options_With_Both_Min_And_Max_Set_To_Zero
-    {
-        [Option(Min=0, Max=0)]
-        public IEnumerable<double> BadDoubleSequence { get; set; }
-    }
+    [Option(Min = 0, Max = 0)] public IEnumerable<double> BadDoubleSequence { get; set; }
 }

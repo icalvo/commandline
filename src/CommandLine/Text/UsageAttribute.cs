@@ -2,19 +2,19 @@
 
 using System;
 
-namespace CommandLine.Text
+namespace CommandLine.Text;
+
+/// <summary>
+///     Applied to a static property that yields a sequence of <see cref="CommandLine.Text.Example" />,
+///     provides data to render usage section of help screen.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class UsageAttribute : Attribute
 {
+    public UsageAttribute(string? applicationAlias = null) => ApplicationAlias = applicationAlias;
+
     /// <summary>
-    /// Applied to a static property that yields a sequence of <see cref="CommandLine.Text.Example"/>,
-    /// provides data to render usage section of help screen.
+    ///     Application name, script or any means that starts current program.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public sealed class UsageAttribute : Attribute
-    {
-        public UsageAttribute(string? applicationAlias = null) => ApplicationAlias = applicationAlias;
-        /// <summary>
-        /// Application name, script or any means that starts current program.
-        /// </summary>
-        public string? ApplicationAlias { get; }
-    }
+    public string? ApplicationAlias { get; }
 }

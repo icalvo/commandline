@@ -3,33 +3,28 @@
 using System;
 using System.Linq;
 
-namespace CommandLine.Core
+namespace CommandLine.Core;
+
+internal static class NameExtensions
 {
-    static class NameExtensions
+    public static bool MatchName(this string value, string shortName, string[] longNames, StringComparer comparer)
     {
-        public static bool MatchName(this string value, string shortName, string[] longNames, StringComparer comparer)
-        {
-            return value.Length == 1
-               ? comparer.Equals(value, shortName)
-               : longNames.Any(longName => comparer.Equals(value, longName));
-        }
+        return value.Length == 1
+            ? comparer.Equals(value, shortName)
+            : longNames.Any(longName => comparer.Equals(value, longName));
+    }
 
-        public static NameInfo FromOptionSpecification(this OptionSpecification specification)
-        {
-            return new NameInfo(
-                specification.ShortName,
-                specification.LongNames);
-        }
+    public static NameInfo FromOptionSpecification(this OptionSpecification specification) =>
+        new(specification.ShortName, specification.LongNames);
 
-        public static NameInfo FromSpecification(this Specification specification)
+    public static NameInfo FromSpecification(this Specification specification)
+    {
+        switch (specification.Tag)
         {
-            switch (specification.Tag)
-            {
-                case SpecificationType.Option:
-                    return FromOptionSpecification((OptionSpecification)specification);
-                default:
-                    return NameInfo.EmptyName;
-            }
+            case SpecificationType.Option:
+                return FromOptionSpecification((OptionSpecification)specification);
+            default:
+                return NameInfo.EmptyName;
         }
     }
 }

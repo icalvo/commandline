@@ -1,8 +1,7 @@
-﻿namespace CommandLine.Tests.Fakes
+﻿namespace CommandLine.Tests.Fakes;
+
+public class Hidden_Option
 {
-    public class Hidden_Option
-    {
-        [Option('h', "hiddenOption",  Hidden = true)]
-        public string HiddenOption { get; set; }
-    }
+    [Option('h', "hiddenOption", Hidden = true)]
+    public string HiddenOption { get; set; }
 }

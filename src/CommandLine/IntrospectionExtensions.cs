@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CommandLine
-{
+﻿namespace CommandLine;
 #if NET40
  
 	internal static class IntrospectionExtensions
@@ -16,5 +9,3 @@ namespace CommandLine
 		}
 	}
 #endif
-}
-

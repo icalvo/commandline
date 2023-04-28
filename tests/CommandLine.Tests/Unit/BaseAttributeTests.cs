@@ -1,58 +1,53 @@
 ﻿using System;
+using CommandLine.Tests.Fakes;
 using Xunit;
 
-namespace CommandLine.Tests.Unit
+namespace CommandLine.Tests.Unit;
+
+public class BaseAttributeTests
 {
-    public class BaseAttributeTests
+    [Theory]
+    [InlineData(null)]
+    [InlineData(1)]
+    public static void Default(object defaultValue)
     {
-        [Theory]
-        [InlineData(null)]
-        [InlineData(1)]
-        public static void Default(object defaultValue)
-        {
-            TestBaseAttribute baseAttribute = new TestBaseAttribute();
-            baseAttribute.Default = defaultValue;
-            Assert.Equal(defaultValue, baseAttribute.Default);
-        }
+        var baseAttribute = new TestBaseAttribute();
+        baseAttribute.Default = defaultValue;
+        Assert.Equal(defaultValue, baseAttribute.Default);
+    }
 
-        [Theory]
-        [InlineData("", null, "")]
-        [InlineData("", typeof(Fakes.StaticResource), "")]
-        [InlineData("Help text", null, "Help text")]
-        [InlineData("HelpText", typeof(Fakes.StaticResource), "Localized HelpText")]
-        [InlineData("HelpText", typeof(Fakes.NonStaticResource), "Localized HelpText")]
-        public static void HelpText(string helpText, Type resourceType, string expected)
-        {
-            TestBaseAttribute baseAttribute = new TestBaseAttribute();
-            baseAttribute.HelpText = helpText;
-            baseAttribute.ResourceType = resourceType;
-            
-            Assert.Equal(expected, baseAttribute.HelpText);
-        }
+    [Theory]
+    [InlineData("", null, "")]
+    [InlineData("", typeof(StaticResource), "")]
+    [InlineData("Help text", null, "Help text")]
+    [InlineData("HelpText", typeof(StaticResource), "Localized HelpText")]
+    [InlineData("HelpText", typeof(NonStaticResource), "Localized HelpText")]
+    public static void HelpText(string helpText, Type resourceType, string expected)
+    {
+        var baseAttribute = new TestBaseAttribute();
+        baseAttribute.HelpText = helpText;
+        baseAttribute.ResourceType = resourceType;
 
-        [Theory]
-        [InlineData("HelpText", typeof(Fakes.NonStaticResource_WithNonStaticProperty))]
-        [InlineData("WriteOnlyText", typeof(Fakes.NonStaticResource))]
-        [InlineData("PrivateOnlyText", typeof(Fakes.NonStaticResource))]
-        [InlineData("HelpText", typeof(Fakes.InternalResource))]
-        public void ThrowsHelpText(string helpText, Type resourceType)
-        {
-            TestBaseAttribute baseAttribute = new TestBaseAttribute();
-            baseAttribute.HelpText = helpText;
-            baseAttribute.ResourceType = resourceType;
+        Assert.Equal(expected, baseAttribute.HelpText);
+    }
 
-            // Verify exception
-            Assert.Throws<ArgumentException>(() => baseAttribute.HelpText.ToString());
-        }
+    [Theory]
+    [InlineData("HelpText", typeof(NonStaticResource_WithNonStaticProperty))]
+    [InlineData("WriteOnlyText", typeof(NonStaticResource))]
+    [InlineData("PrivateOnlyText", typeof(NonStaticResource))]
+    [InlineData("HelpText", typeof(InternalResource))]
+    public void ThrowsHelpText(string helpText, Type resourceType)
+    {
+        var baseAttribute = new TestBaseAttribute();
+        baseAttribute.HelpText = helpText;
+        baseAttribute.ResourceType = resourceType;
+
+        // Verify exception
+        Assert.Throws<ArgumentException>(() => baseAttribute.HelpText);
+    }
 
 
-        private class TestBaseAttribute : BaseAttribute
-        {
-            public TestBaseAttribute()
-            {
-                // Do nothing
-            }
-        }
-
+    private class TestBaseAttribute : BaseAttribute
+    {
     }
 }

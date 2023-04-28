@@ -2,11 +2,9 @@
 
 using System;
 
-namespace CommandLine.Tests.Fakes
+namespace CommandLine.Tests.Fakes;
+
+public class Options_With_Guid
 {
-    public class Options_With_Guid
-    {
-        [Option('t', "txid")]
-        public Guid TransactionId { get; set; }
-    }
+    [Option('t', "txid")] public Guid TransactionId { get; set; }
 }

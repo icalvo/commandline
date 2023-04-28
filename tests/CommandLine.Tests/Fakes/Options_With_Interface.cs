@@ -1,12 +1,10 @@
-﻿namespace CommandLine.Tests.Fakes
+﻿namespace CommandLine.Tests.Fakes;
+
+internal class Options_With_Interface : IInterface_With_Two_Scalar_Options
 {
-    class Options_With_Interface : IInterface_With_Two_Scalar_Options
-    {
-        public bool Verbose { get; set; }
+    public bool Verbose { get; set; }
 
-        public string InputFile { get; set; }
+    public string InputFile { get; set; }
 
-        [Option(HelpText = "Output file.")]
-        public string OutputFile { get; set; }
-    }
+    [Option(HelpText = "Output file.")] public string OutputFile { get; set; }
 }

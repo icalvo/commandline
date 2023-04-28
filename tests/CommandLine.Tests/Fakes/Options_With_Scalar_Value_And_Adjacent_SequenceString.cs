@@ -2,14 +2,11 @@
 
 using System.Collections.Generic;
 
-namespace CommandLine.Tests.Fakes
-{
-    public class Options_With_Scalar_Value_And_Adjacent_SequenceString
-    {
-        [Value(0)]
-        public string StringValueWithIndexZero { get; set; }
+namespace CommandLine.Tests.Fakes;
 
-        [Option('s', "strseq")]
-        public IEnumerable<string> StringOptionSequence { get; set; }
-    }
+public class Options_With_Scalar_Value_And_Adjacent_SequenceString
+{
+    [Value(0)] public string StringValueWithIndexZero { get; set; }
+
+    [Option('s', "strseq")] public IEnumerable<string> StringOptionSequence { get; set; }
 }

@@ -2,49 +2,77 @@
 
 using System;
 using System.Collections.Generic;
-using Xunit;
-using FluentAssertions;
 using CommandLine.Core;
 using CSharpx;
+using FluentAssertions;
+using Xunit;
 
-namespace CommandLine.Tests.Unit.Core
+namespace CommandLine.Tests.Unit.Core;
+
+public class NameLookupTests
 {
-    public class NameLookupTests
+    [Fact]
+    public void Lookup_name_of_sequence_option_with_separator()
     {
-        [Fact]
-        public void Lookup_name_of_sequence_option_with_separator()
+        // Fixture setup
+        var expected = Maybe.Just(".");
+        var specs = new[]
         {
-            // Fixture setup
-            var expected = Maybe.Just(".");
-            var specs = new[] { new OptionSpecification(string.Empty, "string-seq",
-                false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty)};
+            new OptionSpecification(
+                string.Empty,
+                "string-seq",
+                false,
+                string.Empty,
+                Maybe.Nothing<int>(),
+                Maybe.Nothing<int>(),
+                '.',
+                null,
+                string.Empty,
+                string.Empty,
+                new List<string>(),
+                typeof(IEnumerable<string>),
+                TargetType.Sequence,
+                string.Empty)
+        };
 
-            // Exercize system
-            var result = NameLookup.HavingSeparator("string-seq", specs, StringComparer.Ordinal);
-            // Verify outcome
-            expected.Should().BeEquivalentTo(result);
+        // Exercize system
+        var result = NameLookup.HavingSeparator("string-seq", specs, StringComparer.Ordinal);
+        // Verify outcome
+        expected.Should().BeEquivalentTo(result);
 
-            // Teardown
-        }
+        // Teardown
+    }
 
-        [Fact]
-        public void Get_name_from_option_specification()
-        {
-            const string ShortName = "s";
-            const string LongName = "long";
+    [Fact]
+    public void Get_name_from_option_specification()
+    {
+        const string ShortName = "s";
+        const string LongName = "long";
 
-            // Fixture setup
-            var expected = new NameInfo(ShortName, LongName);
-            var spec = new OptionSpecification(ShortName, LongName, false, string.Empty, Maybe.Nothing<int>(), Maybe.Nothing<int>(), '.', null, string.Empty, string.Empty, new List<string>(), typeof(IEnumerable<string>), TargetType.Sequence, string.Empty);
+        // Fixture setup
+        var expected = new NameInfo(ShortName, LongName);
+        var spec = new OptionSpecification(
+            ShortName,
+            LongName,
+            false,
+            string.Empty,
+            Maybe.Nothing<int>(),
+            Maybe.Nothing<int>(),
+            '.',
+            null,
+            string.Empty,
+            string.Empty,
+            new List<string>(),
+            typeof(IEnumerable<string>),
+            TargetType.Sequence,
+            string.Empty);
 
-            // Exercize system
-            var result = spec.FromOptionSpecification();
+        // Exercize system
+        NameInfo result = spec.FromOptionSpecification();
 
-            // Verify outcome
-            expected.Should().BeEquivalentTo(result);
+        // Verify outcome
+        expected.Should().BeEquivalentTo(result);
 
-            // Teardown
-        }
-
+        // Teardown
     }
 }

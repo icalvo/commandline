@@ -1,58 +1,55 @@
 ﻿using System;
 using System.Reflection;
 
-namespace CommandLine.Infrastructure
+namespace CommandLine.Infrastructure;
+
+internal class LocalizableAttributeProperty
 {
-    internal class LocalizableAttributeProperty
+    private readonly string _propertyName;
+    private string? _value;
+    private Type? _type;
+    private PropertyInfo? _localizationPropertyInfo;
+
+    public LocalizableAttributeProperty(string propertyName) => _propertyName = propertyName;
+
+    public string? Value
     {
-        private string _propertyName;
-        private string? _value;
-        private Type? _type;
-        private PropertyInfo? _localizationPropertyInfo;
-
-        public LocalizableAttributeProperty(string propertyName)
+        get => GetLocalizedValue();
+        set
         {
-            _propertyName = propertyName;
-        }
-
-        public string? Value
-        {
-            get { return GetLocalizedValue(); }
-            set
-            {
-                _localizationPropertyInfo = null;
-                _value = value;
-            }
-        }
-
-        public Type? ResourceType
-        {
-            set
-            {
-                _localizationPropertyInfo = null;
-                _type = value;
-            }
-        }
-
-        private string? GetLocalizedValue()
-        {
-            if (String.IsNullOrEmpty(_value) || _type == null)
-                return _value;
-            if (_localizationPropertyInfo == null)
-            {
-                // Static class IsAbstract 
-                if (!_type.IsVisible)
-                    throw new ArgumentException($"Invalid resource type '{_type.FullName}'! {_type.Name} is not visible for the parser! Change resources 'Access Modifier' to 'Public'", _propertyName);
-                PropertyInfo? propertyInfo = _type.GetProperty(
-                    _value,
-                    BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static);
-                if (propertyInfo == null || !propertyInfo.CanRead || propertyInfo.PropertyType != typeof(string))
-                    throw new ArgumentException("Invalid resource property name! Localized value: {_value}", _propertyName);
-                _localizationPropertyInfo = propertyInfo;
-            }
-
-            return (string?)_localizationPropertyInfo.GetValue(null, null);
+            _localizationPropertyInfo = null;
+            _value = value;
         }
     }
 
+    public Type? ResourceType
+    {
+        set
+        {
+            _localizationPropertyInfo = null;
+            _type = value;
+        }
+    }
+
+    private string? GetLocalizedValue()
+    {
+        if (string.IsNullOrEmpty(_value) || _type == null)
+            return _value;
+        if (_localizationPropertyInfo == null)
+        {
+            // Static class IsAbstract 
+            if (!_type.IsVisible)
+                throw new ArgumentException(
+                    $"Invalid resource type '{_type.FullName}'! {_type.Name} is not visible for the parser! Change resources 'Access Modifier' to 'Public'",
+                    _propertyName);
+            PropertyInfo? propertyInfo = _type.GetProperty(
+                _value,
+                BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static);
+            if (propertyInfo == null || !propertyInfo.CanRead || propertyInfo.PropertyType != typeof(string))
+                throw new ArgumentException("Invalid resource property name! Localized value: {_value}", _propertyName);
+            _localizationPropertyInfo = propertyInfo;
+        }
+
+        return (string?)_localizationPropertyInfo.GetValue(null, null);
+    }
 }
