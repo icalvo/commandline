@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CommandLine.Tests.Fakes;
 
-class Options_With_Sequence_Having_Separator_Set
+internal class Options_With_Sequence_Having_Separator_Set
 {
     [Option("long-seq", Separator=';')]
     public IEnumerable<long> LongSequence { get; set; }

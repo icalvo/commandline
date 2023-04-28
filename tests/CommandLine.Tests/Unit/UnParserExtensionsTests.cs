@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Xunit;
-using FluentAssertions;
 using CommandLine.Tests.Fakes;
+using FluentAssertions;
+using Xunit;
 #if !SKIP_FSHARP
 using Microsoft.FSharp.Core;
 #endif
@@ -318,47 +318,56 @@ namespace CommandLine.Tests.Unit
             args.Should().BeEquivalentTo(expectedArgs);
         }
         #endregion
-        class Option_Int_Nullable
+
+        private class Option_Int_Nullable
         {
             [Option('v', Default = 1)]
             public int? VerboseLevel { get; set; }
         }
-        class Option_Int
+
+        private class Option_Int
         {
             [Option('v', Default = 1)]
             public int VerboseLevel { get; set; }
         }
-        class Option_FlagCounter
+
+        private class Option_FlagCounter
         {
             [Option('v', Default = 1, FlagCounter=true)]
             public int VerboseLevel { get; set; }
         }
-        class Option_Nullable_Bool
+
+        private class Option_Nullable_Bool
         {
             [Option('v')]
             public bool? Verbose { get; set; }
         }
-        class Option_Nullable_Enum
+
+        private class Option_Nullable_Enum
         {
             [Option]
             public Shapes? Shape { get; set; }
         }
-        class Options_Date
+
+        private class Options_Date
         {
             [Option]
             public DateTime Start { get; set; }
         }
-        class Options_Date_Nullable
+
+        private class Options_Date_Nullable
         {
             [Option]
             public DateTime? Start { get; set; }
         }
-        class Options_TimeSpan
+
+        private class Options_TimeSpan
         {
             [Option]
             public TimeSpan Start { get; set; }
         }
-        class Options_DateTimeOffset
+
+        private class Options_DateTimeOffset
         {
             [Option]
             public DateTimeOffset Start { get; set; }

@@ -1,4 +1,6 @@
 using System;
 
 [AttributeUsage(AttributeTargets.All)]
-class CustomAttribute: Attribute {}
+internal class CustomAttribute : Attribute
+{
+}

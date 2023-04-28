@@ -15,7 +15,7 @@ namespace RailwaySharp.ErrorHandling
 #if !ERRH_INTERNAL
     public
 #endif
-    enum ResultType
+    internal enum ResultType
     {
         Ok,
         Bad
@@ -121,7 +121,7 @@ namespace RailwaySharp.ErrorHandling
 #if !ERRH_INTERNAL
     public
 #endif
-    static class Result
+    internal static class Result
     {
         /// <summary>
         /// Creates a Failure result with the given messages.
@@ -195,7 +195,7 @@ namespace RailwaySharp.ErrorHandling
 #if !ERRH_INTERNAL
     public
 #endif
-    static class Trial
+    internal static class Trial
     {
         /// <summary>
         /// Wraps a value in a Success.
@@ -458,7 +458,7 @@ namespace RailwaySharp.ErrorHandling
 #if !ERRH_INTERNAL
     public
 #endif
-    static class ResultExtensions
+    internal static class ResultExtensions
     {
         /// <summary>
         /// Allows pattern matching on Results.

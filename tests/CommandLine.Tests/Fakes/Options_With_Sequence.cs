@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CommandLine.Tests.Fakes;
 
-class Options_With_Sequence
+internal class Options_With_Sequence
 {
     [Option("int-seq")]
     public IEnumerable<int> IntSequence { get; set; }

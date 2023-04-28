@@ -1,11 +1,8 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
-using System;
-using System.Linq;
-
 namespace CommandLine.Tests.Fakes;
 
-class Options_With_Shuffled_Index_Values
+internal class Options_With_Shuffled_Index_Values
 {
     [Value(1)]
     public string Arg1 { get; set; }

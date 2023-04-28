@@ -32,7 +32,7 @@ public class HelpText
 
     #region ordering
 
-    ComparableOption ToComparableOption(Specification spec, int index)
+    private ComparableOption ToComparableOption(Specification spec, int index)
     {
         var option = spec as OptionSpecification;
         var value = spec as ValueSpecification;

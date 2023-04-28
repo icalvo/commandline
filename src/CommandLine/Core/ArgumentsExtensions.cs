@@ -7,7 +7,7 @@ using CSharpx;
 
 namespace CommandLine.Core;
 
-static class ArgumentsExtensions
+internal static class ArgumentsExtensions
 {
     public static IEnumerable<Error> Preprocess(
         this IEnumerable<string> arguments,
