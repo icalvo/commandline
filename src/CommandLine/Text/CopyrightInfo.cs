@@ -18,10 +18,10 @@ namespace CommandLine.Text
         private const string DefaultCopyrightWord = "Copyright";
         private const string SymbolLower = "(c)";
         private const string SymbolUpper = "(C)";
-        private readonly AssemblyCopyrightAttribute attribute;
+        private readonly AssemblyCopyrightAttribute? attribute;
         private readonly bool isSymbolUpper;
         private readonly int[] copyrightYears;
-        private readonly string author;
+        private readonly string? author;
         private readonly int builderSize;
 
         /// <summary>
@@ -84,9 +84,7 @@ namespace CommandLine.Text
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.Text.CopyrightInfo"/> class.
         /// </summary>
-        protected CopyrightInfo()
-        {
-        }
+        protected CopyrightInfo() => copyrightYears = Array.Empty<int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.Text.CopyrightInfo"/> class
@@ -96,6 +94,7 @@ namespace CommandLine.Text
         private CopyrightInfo(AssemblyCopyrightAttribute attribute)
         {
             this.attribute = attribute;
+            copyrightYears = Array.Empty<int>();
         }
 
         /// <summary>
@@ -116,12 +115,11 @@ namespace CommandLine.Text
                         return new CopyrightInfo(copyrightAttr.FromJustOrFail());
                     default:
                         var companyAttr = ReflectionHelper.GetAttribute<AssemblyCompanyAttribute>();
-                        return companyAttr.IsNothing()
-                            //if both copyrightAttr and companyAttr aren't available in Assembly,don't fire Exception
-                            ? Empty
+                        return companyAttr.Match(
                             // if no copyright attribute exist but a company attribute does, use it as copyright holder
-                            : new CopyrightInfo(companyAttr.FromJust().Company, DateTime.Now.Year);
-                        
+                            companyAttribute => new CopyrightInfo(companyAttribute.Company, DateTime.Now.Year),
+                            //if both copyrightAttr and companyAttr aren't available in Assembly,don't fire Exception
+                            Empty);
                 }
             }
         }

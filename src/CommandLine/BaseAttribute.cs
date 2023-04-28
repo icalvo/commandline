@@ -1,6 +1,7 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
 using System;
+using CommandLine.Infrastructure;
 
 namespace CommandLine
 {
@@ -11,10 +12,9 @@ namespace CommandLine
     {
         private int min;
         private int max;
-        private object @default;
-        private Infrastructure.LocalizableAttributeProperty helpText;
+        private LocalizableAttributeProperty helpText;
         private string metaValue;
-        private Type resourceType;
+        private Type? resourceType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.BaseAttribute"/> class.
@@ -23,7 +23,7 @@ namespace CommandLine
         {
             min = -1;
             max = -1;
-            helpText = new Infrastructure.LocalizableAttributeProperty(nameof(HelpText));
+            helpText = new LocalizableAttributeProperty(nameof(HelpText));
             metaValue = string.Empty;
             resourceType = null;
         }
@@ -78,14 +78,7 @@ namespace CommandLine
         /// <summary>
         /// Gets or sets mapped property default value.
         /// </summary>
-        public object Default
-        {
-            get { return @default; }
-            set
-            {
-                @default = value;
-            }
-        }
+        public object? Default { get; set; }
 
         /// <summary>
         /// Gets or sets a short description of this command line option. Usually a sentence summary.
@@ -125,7 +118,7 @@ namespace CommandLine
         /// <summary>
         /// Gets or sets the <see cref="System.Type"/> that contains the resources for <see cref="HelpText"/>.
         /// </summary>
-        public Type ResourceType
+        public Type? ResourceType
         {
             get { return resourceType; }
             set

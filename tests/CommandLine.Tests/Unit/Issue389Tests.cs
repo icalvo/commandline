@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 using CommandLine.Text;
+using Xunit;
 
 namespace CommandLine.Tests.Unit
 {
@@ -60,7 +60,7 @@ namespace CommandLine.Tests.Unit
             [Option('j', "jobId", Required = true, HelpText = "Texts.ExplainJob")]
             public int JobId { get; set; }
 
-            [Usage(ApplicationAlias = "Importer.exe")]
+            [Usage("Importer.exe")]
             public static IEnumerable<Example> Examples
             {
                 get => new[] {

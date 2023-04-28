@@ -18,10 +18,9 @@ namespace CommandLine
         /// <param name="result">An <see cref="CommandLine.ParserResult{T}"/> instance.</param>
         /// <param name="action">The <see cref="Action{T}"/> to execute.</param>
         /// <returns>The same <paramref name="result"/> instance.</returns>
-        public static ParserResult<T> WithParsed<T>(this ParserResult<T> result, Action<T> action)
+        public static ParserResult<T> WithParsed<T>(this ParserResult<T> result, Action<T?> action) where T : notnull
         {
-            var parsed = result as Parsed<T>;
-            if (parsed != null)
+            if (result is Parsed<T> parsed)
             {
                 action(parsed.Value);
             }
@@ -76,11 +75,9 @@ namespace CommandLine
         /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
         /// <returns>The new value.</returns>
         public static TResult MapResult<TSource, TResult>(this ParserResult<TSource> result,
-            Func<TSource, TResult> parsedFunc,
-            Func<IEnumerable<Error>, TResult> notParsedFunc)
+            Func<TSource?, TResult> parsedFunc, Func<IEnumerable<Error>, TResult> notParsedFunc) where TSource : notnull
         {
-            var parsed = result as Parsed<TSource>;
-            if (parsed != null)
+            if (result is Parsed<TSource> parsed)
             {
                 return parsedFunc(parsed.Value);
             }

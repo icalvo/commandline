@@ -8,7 +8,7 @@ namespace CommandLine.Core
     internal static class DictionaryExtensions
     {
         public static Maybe<TValue> TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dic, TKey key) =>
-            dic.TryGetValue(key, out TValue value) ? Maybe.Just(value) : Maybe.Nothing<TValue>();
+            dic.TryGetValue(key, out TValue? value) ? Maybe.Just(value) : Maybe.Nothing<TValue>();
     }
 
     internal static class EnumerableExtensions

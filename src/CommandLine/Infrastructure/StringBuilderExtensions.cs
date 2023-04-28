@@ -7,7 +7,7 @@ namespace CommandLine.Infrastructure
 {
     static class StringBuilderExtensions
     {
-        public static StringBuilder AppendWhen(this StringBuilder builder, bool condition, params string[] values)
+        public static StringBuilder AppendWhen(this StringBuilder builder, bool condition, params string?[] values)
         {
             if (condition)
                 foreach (var value in values)

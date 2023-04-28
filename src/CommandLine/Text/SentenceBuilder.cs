@@ -149,7 +149,8 @@ namespace CommandLine.Text
                                         "' is defined multiple times.");
                                 case ErrorType.SetValueExceptionError:
                                     var setValueError = (SetValueExceptionError)error;
-                                    return "Error setting value to option '".JoinTo(setValueError.NameInfo.NameText, "': ", setValueError.Exception.Message);
+                                    return
+                                        $"Error setting value to option '{setValueError.NameInfo.NameText}': {setValueError.Exception?.Message}";
                                 case ErrorType.MissingGroupOptionError:
                                     var missingGroupOptionError = (MissingGroupOptionError)error;
                                     return "At least one option from group '".JoinTo(

@@ -14,7 +14,7 @@ namespace CommandLine.Infrastructure
         /// <summary>
         /// Per thread assembly attribute overrides for testing.
         /// </summary>
-        [ThreadStatic] private static IDictionary<Type, Attribute> _overrides;
+        [ThreadStatic] private static IDictionary<Type, Attribute>? _overrides;
 
         /// <summary>
         /// Assembly attribute overrides for testing.
@@ -64,23 +64,21 @@ namespace CommandLine.Infrastructure
                 : Maybe.Nothing<TAttribute>();
         }
 
-        public static string GetAssemblyName()
+        public static string? GetAssemblyName()
         {
             var assembly = GetExecutingOrEntryAssembly();
             return assembly.GetName().Name;
         }
 
-        public static string GetAssemblyVersion()
+        public static string? GetAssemblyVersion()
         {
             var assembly = GetExecutingOrEntryAssembly();
-            return assembly.GetName().Version.ToStringInvariant();
+            return assembly.GetName().Version?.ToStringInvariant();
         }
 
-        public static bool IsFSharpOptionType(Type type)
-        {
-            return type.FullName.StartsWith(
-                "Microsoft.FSharp.Core.FSharpOption`1", StringComparison.Ordinal);
-        }
+        public static bool IsFSharpOptionType(Type type) =>
+            type.FullName?.StartsWith(
+                "Microsoft.FSharp.Core.FSharpOption`1", StringComparison.Ordinal) ?? throw new InvalidOperationException("The type must have full name");
 
         public static T CreateDefaultImmutableInstance<T>(PropertyInfo[] constructorTypes)
         {
@@ -95,7 +93,9 @@ namespace CommandLine.Infrastructure
             if (parameters.Length != constructorTypes.Length)
                 return Enumerable.Empty<(PropertyInfo, Maybe<ParameterInfo>)>();
 
-            var parametersDic = parameters.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
+            var parametersDic = parameters.ToDictionary(
+                x => x.Name ?? throw new InvalidOperationException("Cannot have nameless parameter"),
+                StringComparer.OrdinalIgnoreCase);
 
             return constructorTypes.Select(ct => (ct, parametersDic.TryGetValue(ct.Name)));
         }
@@ -177,10 +177,8 @@ namespace CommandLine.Infrastructure
         {
             if (t.IsEnum)
                 return Enum.GetNames(t);
-            Type u = Nullable.GetUnderlyingType(t);
-            if (u != null && u.IsEnum)
-                return Enum.GetNames(u);
-            return Enumerable.Empty<string>();
+            Type? u = Nullable.GetUnderlyingType(t);
+            return u is { IsEnum: true } ? Enum.GetNames(u) : Enumerable.Empty<string>();
         }
     }
 }

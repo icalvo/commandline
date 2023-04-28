@@ -39,7 +39,9 @@ namespace CommandLine.Core
         private static Maybe<object> ChangeTypeScalar(string value, Type conversionType, CultureInfo conversionCulture, bool ignoreValueCase)
         {
             var result = ChangeTypeScalarImpl(value, conversionType, conversionCulture, ignoreValueCase);
-            result.Match((_,__) => { }, e => e.First().RethrowWhenAbsentIn(
+            result.Match(
+                (_, _) => { },
+                e => e.First().RethrowWhenAbsentIn(
                 new[] { typeof(InvalidCastException), typeof(FormatException), typeof(OverflowException) }));
             return result.ToMaybe();
         }
@@ -56,12 +58,14 @@ namespace CommandLine.Core
         {
             try
             {
-                return Convert.ChangeType(value, type, conversionCulture);
+                return Convert.ChangeType(value, type, conversionCulture) ??
+                       throw new Exception("Unexpected failure in ChangeType");
             }
             catch (InvalidCastException)
             {
                 // Required for converting from string to TimeSpan because Convert.ChangeType can't
-                return System.ComponentModel.TypeDescriptor.GetConverter(type).ConvertFrom(null, conversionCulture, value);
+                return System.ComponentModel.TypeDescriptor.GetConverter(type)
+                    .ConvertFrom(null, conversionCulture, value) ?? throw new Exception("Error in ConvertFrom");
             }
         }
 
@@ -73,7 +77,7 @@ namespace CommandLine.Core
                 {
                     var isFsOption = ReflectionHelper.IsFSharpOptionType(conversionType);
 
-                    Func<Type> getUnderlyingType =
+                    var getUnderlyingType =
                         () =>
 #if !SKIP_FSHARP
                             isFsOption
@@ -93,10 +97,10 @@ namespace CommandLine.Core
 #if !SKIP_FSHARP
                     Func<object> empty = () => isFsOption ? FSharpOptionHelper.None(type) : null;
 #else
-                    Func<object> empty = () => null;
+                    Func<object?> empty = () => null;
 #endif
 
-                    return (value == null) ? empty() : withValue();
+                    return withValue();
                 };
 
                 return value.IsBooleanString() && conversionType == typeof(bool)
@@ -108,7 +112,8 @@ namespace CommandLine.Core
             {
                 try
                 {
-                    var ctor = conversionType.GetTypeInfo().GetConstructor(new[] { typeof(string) });
+                    ConstructorInfo ctor = conversionType.GetTypeInfo().GetConstructor(new[] { typeof(string) }) ??
+                                           throw new Exception();
                     return ctor.Invoke(new object[] { value });
                 }
                 catch (Exception)
@@ -144,11 +149,8 @@ namespace CommandLine.Core
 
         private static bool IsDefinedEx(object enumValue)
         {
-            char firstChar = enumValue.ToString()[0];
-            if (Char.IsDigit(firstChar) || firstChar == '-')
-                return false;
-
-            return true;
+            var s = enumValue.ToString();
+            return s is not { Length: >= 1 } || (!char.IsDigit(s[0]) && s[0] != '-');
         }
     }
 }

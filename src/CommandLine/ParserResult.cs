@@ -8,31 +8,27 @@ namespace CommandLine
 {
     public sealed class TypeInfo
     {
-        private readonly Type current;
         private readonly IEnumerable<Type> choices;
 
-        private TypeInfo(Type current, IEnumerable<Type> choices)
+        private TypeInfo(Type? current, IEnumerable<Type> choices)
         {
-            this.current = current;
+            this.Current = current;
             this.choices = choices;
         }
 
-        public Type Current
-        {
-            get { return this.current; }
-        }
+        public Type? Current { get; }
 
         public IEnumerable<Type> Choices
         {
             get { return this.choices; }
         }
 
-        internal static TypeInfo Create(Type current)
+        internal static TypeInfo Create(Type? current)
         {
             return new TypeInfo(current, Enumerable.Empty<Type>());
         }
 
-        internal static TypeInfo Create(Type current, IEnumerable<Type> choices)
+        internal static TypeInfo Create(Type? current, IEnumerable<Type> choices)
         {
             return new TypeInfo(current, choices);
         }
@@ -96,7 +92,7 @@ namespace CommandLine
         /// <summary>
         /// Gets the instance with parsed values. If one or more errors occures, <see langword="default"/> is returned.
         /// </summary>
-        public T Value { get; }
+        public T? Value { get; }
 
         /// <summary>
         /// Gets the sequence of parsing errors. If there are no errors, then an empty IEnumerable is returned.
@@ -108,7 +104,7 @@ namespace CommandLine
     /// It contains an instance of type <typeparamref name="T"/> with parsed values.
     /// </summary>
     /// <typeparam name="T">The type with attributes that define the syntax of parsing rules.</typeparam>
-    public sealed class Parsed<T> : ParserResult<T>, IEquatable<Parsed<T>>
+    public sealed class Parsed<T> : ParserResult<T>, IEquatable<Parsed<T>> where T : notnull
     {
         internal Parsed(T value, TypeInfo typeInfo)
             : base(value, typeInfo)
@@ -120,13 +116,14 @@ namespace CommandLine
         {
         }
 
+        public new T Value => base.Value!;
 
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>.
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is Parsed<T> other)
             {
@@ -150,15 +147,14 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.Parsed{T}"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.Parsed{T}"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(Parsed<T> other)
+        public bool Equals(Parsed<T>? other)
         {
             if (other == null)
             {
                 return false;
             }
 
-            return this.Tag.Equals(other.Tag)
-                && Value.Equals(other.Value);
+            return this.Tag.Equals(other.Tag) && Equals(Value, other.Value);
         }
     }
 
@@ -180,7 +176,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is NotParsed<T> other)
             {
@@ -204,7 +200,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.NotParsed{T}"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.NotParsed{T}"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(NotParsed<T> other)
+        public bool Equals(NotParsed<T>? other)
         {
             if (other == null)
             {

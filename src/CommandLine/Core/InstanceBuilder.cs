@@ -21,8 +21,7 @@ namespace CommandLine.Core
             bool ignoreValueCase,
             CultureInfo parsingCulture,
             bool autoHelp,
-            bool autoVersion,
-            IEnumerable<ErrorType> nonFatalErrors)
+            bool autoVersion, IEnumerable<ErrorType> nonFatalErrors) where T : notnull
         {
             return Build(
                 factory,
@@ -46,8 +45,8 @@ namespace CommandLine.Core
             CultureInfo parsingCulture,
             bool autoHelp,
             bool autoVersion,
-            bool allowMultiInstance,
-            IEnumerable<ErrorType> nonFatalErrors)        {
+            bool allowMultiInstance, IEnumerable<ErrorType> nonFatalErrors) where T : notnull
+        {
             var typeInfo = factory.MapValueOrDefault(f => f().GetType(), typeof(T));
 
             var specProps = typeInfo.GetSpecifications(pi => SpecificationProperty.Create(
@@ -183,7 +182,7 @@ namespace CommandLine.Core
                 typeInfo,
                 specProps.Select(sp => sp.Property).ToArray());
             var values = (from prms in ctor.GetParameters()
-                join sp in specPropsWithValue on prms.Name.ToLower() equals sp.Property.Name.ToLower() into spv
+                join sp in specPropsWithValue on prms.Name?.ToLower() equals sp.Property.Name.ToLower() into spv
                 from sp in spv.DefaultIfEmpty()
                 select sp == null
                     ? specProps.First(

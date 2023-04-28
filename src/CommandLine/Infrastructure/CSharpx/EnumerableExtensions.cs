@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -201,34 +202,50 @@ namespace CSharpx
             return FoldImpl(source, 4, null, null, null, folder);
         }
 
-        static TResult FoldImpl<T, TResult>(IEnumerable<T> source, int count,
-            Func<T, TResult> folder1,
-            Func<T, T, TResult> folder2,
-            Func<T, T, T, TResult> folder3,
-            Func<T, T, T, T, TResult> folder4)
+        static TResult FoldImpl<T, TResult>(IEnumerable<T> source, int count, Func<T, TResult>? folder1,
+            Func<T, T, TResult>? folder2, Func<T, T, T, TResult>? folder3, Func<T, T, T, T, TResult>? folder4)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (count == 1 && folder1 == null
-                || count == 2 && folder2 == null
-                || count == 3 && folder3 == null
-                || count == 4 && folder4 == null)
+
+            switch (count)
+            {
+                case 1:
+                {
+                    var elements = GetElements(source, count, folder1);
+                    return folder1(elements[0]);
+                }
+                case 2:
+                {
+                    var elements = GetElements(source, count, folder2);
+                    return folder2(elements[0], elements[1]);
+                }
+                case 3:
+                {
+                    var elements = GetElements(source, count, folder3);
+                    return folder3(elements[0], elements[1], elements[2]);
+                }
+                case 4:
+                {
+                    var elements = GetElements(source, count, folder4);
+                    return folder4(elements[0], elements[1], elements[2], elements[3]);
+                }
+                default: throw new NotSupportedException();
+            }
+        }
+
+        private static T[] GetElements<T, TF>(IEnumerable<T> source, int count, [NotNull] TF? folder)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (folder == null)
             {                                                // ReSharper disable NotResolvedInText
                 throw new ArgumentNullException("folder");   // ReSharper restore NotResolvedInText
             }
 
             var elements = new T[count];
-            foreach (var e in AssertCountImpl(
-                source.Index(), count, OnFolderSourceSizeErrorSelector)) {
+            foreach (var e in AssertCountImpl(source.Index(), count, OnFolderSourceSizeErrorSelector))
                 elements[e.Key] = e.Value;
-            }
 
-            switch (count) {
-                case 1: return folder1(elements[0]);
-                case 2: return folder2(elements[0], elements[1]);
-                case 3: return folder3(elements[0], elements[1], elements[2]);
-                case 4: return folder4(elements[0], elements[1], elements[2], elements[3]);
-                default: throw new NotSupportedException();
-            }
+            return elements;
         }
 
         static readonly Func<int, int, Exception> OnFolderSourceSizeErrorSelector = OnFolderSourceSizeError;
@@ -299,19 +316,20 @@ namespace CSharpx
         /// Creates a delimited string from a sequence of values and
         /// a given delimiter.
         /// </summary>
-        public static string ToDelimitedString<TSource>(this IEnumerable<TSource> source, string delimiter)
+        public static string ToDelimitedString<TSource>(this IEnumerable<TSource> source, string? delimiter)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
             return ToDelimitedStringImpl(source, delimiter, (sb, e) => sb.Append(e));
         }
 
-        static string ToDelimitedStringImpl<T>(IEnumerable<T> source, string delimiter, Func<StringBuilder, T, StringBuilder> append)
+        private static string ToDelimitedStringImpl<T>(IEnumerable<T> source, string? delimiter,
+            Func<StringBuilder, T, StringBuilder> append)
         {
             Debug.Assert(source != null);
             Debug.Assert(append != null);
 
-            delimiter = delimiter ?? CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+            delimiter ??= CultureInfo.CurrentCulture.TextInfo.ListSeparator;
             var sb = new StringBuilder();
             var i = 0;
 

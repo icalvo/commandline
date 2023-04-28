@@ -143,10 +143,9 @@ namespace CommandLine
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var other = obj as Error;
-            if (other != null)
+            if (obj is Error other)
             {
                 return Equals(other);
             }
@@ -168,15 +167,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.Error"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.Error"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(Error other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Tag.Equals(other.Tag);
-        }
+        public bool Equals(Error? other) => other != null && Tag.Equals(other.Tag);
     }
 
     /// <summary>
@@ -212,10 +203,9 @@ namespace CommandLine
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            var other = obj as TokenError;
-            if (other != null)
+            if (obj is TokenError other)
             {
                 return Equals(other);
             }
@@ -237,7 +227,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.TokenError"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.TokenError"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(TokenError other)
+        public bool Equals(TokenError? other)
         {
             if (other == null)
             {
@@ -291,7 +281,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as NamedError;
             if (other != null)
@@ -316,7 +306,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.NamedError"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.NamedError"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(NamedError other)
+        public bool Equals(NamedError? other)
         {
             if (other == null)
             {
@@ -442,33 +432,25 @@ namespace CommandLine
     /// </summary>
     public sealed class HelpVerbRequestedError : Error
     {
-        private readonly string verb;
-        private readonly Type type;
         private readonly bool matched;
 
-        internal HelpVerbRequestedError(string verb, Type type, bool matched)
+        internal HelpVerbRequestedError(string? verb, Type? type, bool matched)
             : base(ErrorType.HelpVerbRequestedError, true)
         {
-            this.verb = verb;
-            this.type = type;
+            this.Verb = verb;
+            this.Type = type;
             this.matched = matched;
         }
 
         /// <summary>
         /// Verb command string.
         /// </summary>
-        public string Verb
-        {
-            get { return verb; }
-        }
+        public string? Verb { get; }
 
         /// <summary>
         /// <see cref="System.Type"/> of verb command.
         /// </summary>
-        public Type Type
-        {
-            get { return type; }
-        }
+        public Type? Type { get; }
 
         /// <summary>
         /// <value>true</value> if verb command is found; otherwise <value>false</value>.
@@ -519,23 +501,19 @@ namespace CommandLine
     /// </summary>
     public sealed class SetValueExceptionError : NamedError
     {
-        private readonly Exception exception;
         private readonly object value;
 
-        internal SetValueExceptionError(NameInfo nameInfo, Exception exception, object value)
+        internal SetValueExceptionError(NameInfo nameInfo, Exception? exception, object value)
             : base(ErrorType.SetValueExceptionError, nameInfo)
         {
-            this.exception = exception;
+            this.Exception = exception;
             this.value = value;
         }
 
         /// <summary>
-        /// The expection thrown from Property.SetValue
+        /// The exception thrown from Property.SetValue
         /// </summary>
-        public Exception Exception
-        {
-            get { return exception; }
-        }
+        public Exception? Exception { get; }
 
         /// <summary>
         /// The value that had to be set to the property
@@ -583,10 +561,9 @@ namespace CommandLine
             get { return names; }
         }
 
-        public new bool Equals(Error obj)
+        public new bool Equals(Error? obj)
         {
-            var other = obj as MissingGroupOptionError;
-            if (other != null)
+            if (obj is MissingGroupOptionError other)
             {
                 return Equals(other);
             }
@@ -594,7 +571,7 @@ namespace CommandLine
             return base.Equals(obj);
         }
 
-        public bool Equals(MissingGroupOptionError other)
+        public bool Equals(MissingGroupOptionError? other)
         {
             if (other == null)
             {

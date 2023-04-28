@@ -3,7 +3,6 @@
 using System;
 using System.Globalization;
 using System.IO;
-
 using CommandLine.Infrastructure;
 using CSharpx;
 
@@ -19,7 +18,7 @@ namespace CommandLine
         private bool disposed;
         private bool caseSensitive;
         private bool caseInsensitiveEnumValues;
-        private TextWriter helpWriter;
+        private TextWriter? helpWriter;
         private bool ignoreUnknownArguments;
         private bool autoHelp;
         private bool autoVersion;
@@ -122,7 +121,7 @@ namespace CommandLine
         /// <remarks>
         /// It is the caller's responsibility to dispose or close the <see cref="TextWriter"/>.
         /// </remarks>
-        public TextWriter HelpWriter
+        public TextWriter? HelpWriter
         {
             get { return helpWriter; }
             set { PopsicleSetter.Set(Consumed, ref helpWriter, value); }

@@ -83,7 +83,7 @@ namespace CommandLine
         /// <returns>A <see cref="CommandLine.ParserResult{T}"/> containing an instance of type <typeparamref name="T"/> with parsed values
         /// and a sequence of <see cref="CommandLine.Error"/>.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if one or more arguments are null.</exception>
-        public ParserResult<T> ParseArguments<T>(IEnumerable<string> args)
+        public ParserResult<T> ParseArguments<T>(IEnumerable<string> args) where T : notnull
         {
             if (args == null) throw new ArgumentNullException("args");
 
@@ -116,7 +116,7 @@ namespace CommandLine
         /// <returns>A <see cref="CommandLine.ParserResult{T}"/> containing an instance of type <typeparamref name="T"/> with parsed values
         /// and a sequence of <see cref="CommandLine.Error"/>.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown if one or more arguments are null.</exception>
-        public ParserResult<T> ParseArguments<T>(Func<T> factory, IEnumerable<string> args)
+        public ParserResult<T> ParseArguments<T>(Func<T> factory, IEnumerable<string> args) where T : notnull
         {
             if (factory == null) throw new ArgumentNullException("factory");
             if (!typeof(T).IsMutable()) throw new ArgumentException("factory");
@@ -205,12 +205,13 @@ namespace CommandLine
                 settings.MaximumDisplayWidth);
         }
 
-        private static ParserResult<T> DisplayHelp<T>(ParserResult<T> parserResult, TextWriter helpWriter, int maxDisplayWidth)
+        private static ParserResult<T> DisplayHelp<T>(ParserResult<T> parserResult, TextWriter? helpWriter,
+            int maxDisplayWidth)
         {
             parserResult.WithNotParsed(
                 errors =>
-                    Maybe.Merge(errors.ToMaybe(), helpWriter.ToMaybe())
-                        .Do((_, writer) => writer.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth)))
+                    Maybe.Merge(errors.ToMaybe(), helpWriter.ToMaybe()).Do(
+                        (_, writer) => writer?.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth)))
                 );
 
             return parserResult;

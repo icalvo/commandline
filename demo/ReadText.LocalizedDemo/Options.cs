@@ -42,7 +42,7 @@ namespace ReadText.LocalizedDemo
 
         public string FileName { get; set; }
 
-        [Usage(ApplicationAlias = "ReadText.LocalizedDemo.exe")]
+        [Usage("ReadText.LocalizedDemo.exe")]
         public static IEnumerable<Example> Examples
         {
             get

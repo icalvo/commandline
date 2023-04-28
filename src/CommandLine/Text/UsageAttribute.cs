@@ -11,9 +11,10 @@ namespace CommandLine.Text
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class UsageAttribute : Attribute
     {
+        public UsageAttribute(string? applicationAlias = null) => ApplicationAlias = applicationAlias;
         /// <summary>
         /// Application name, script or any means that starts current program.
         /// </summary>
-        public string ApplicationAlias { get; set; }
+        public string? ApplicationAlias { get; }
     }
 }

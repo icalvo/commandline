@@ -9,7 +9,7 @@ namespace CommandLine
 {
     static class ErrorExtensions
     {
-        public static ParserResult<T> ToParserResult<T>(this IEnumerable<Error> errors, T instance)
+        public static ParserResult<T> ToParserResult<T>(this IEnumerable<Error> errors, T instance) where T : notnull
         {
             return errors.Any()
                 ? (ParserResult<T>)new NotParsed<T>(instance.GetType().ToTypeInfo(), errors)

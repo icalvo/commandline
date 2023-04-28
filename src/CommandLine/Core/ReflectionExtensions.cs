@@ -14,7 +14,7 @@ namespace CommandLine.Core
 {
     static class ReflectionExtensions
     {
-        public static IEnumerable<T> GetSpecifications<T>(this Type type, Func<PropertyInfo, T> selector)
+        public static IEnumerable<T> GetSpecifications<T>(this Type? type, Func<PropertyInfo, T> selector)
         {
             return from pi in type.FlattenHierarchy().SelectMany(x => x.GetTypeInfo().GetProperties())
                    let attrs = pi.GetCustomAttributes(true)
@@ -36,7 +36,7 @@ namespace CommandLine.Core
                     .ToMaybe();
         }
 
-        public static Maybe<Tuple<PropertyInfo, UsageAttribute>> GetUsageData(this Type type)
+        public static Maybe<Tuple<PropertyInfo, UsageAttribute>> GetUsageData(this Type? type)
         {
             return
                 (from pi in type.FlattenHierarchy().SelectMany(x => x.GetTypeInfo().GetProperties())
@@ -47,7 +47,7 @@ namespace CommandLine.Core
                         .ToMaybe();
         }
 
-        private static IEnumerable<Type> FlattenHierarchy(this Type type)
+        private static IEnumerable<Type> FlattenHierarchy(this Type? type)
         {
             if (type == null)
             {
@@ -159,7 +159,7 @@ namespace CommandLine.Core
         {
             if (type.IsMutable())
             {
-                return Activator.CreateInstance(type);
+                return Activator.CreateInstance(type) ?? throw new Exception("CreateInstance returned null");
             }
 
             var properties = type.GetSpecifications(pi => pi).ToArray();
@@ -172,7 +172,7 @@ namespace CommandLine.Core
             return TypeInfo.Create(type);
         }
 
-        public static object StaticMethod(this Type type, string name, params object[] args)
+        public static object? StaticMethod(this Type type, string name, params object[] args)
         {
             return type.GetTypeInfo().InvokeMember(
                 name,
@@ -182,7 +182,7 @@ namespace CommandLine.Core
                 args);
         }
 
-        public static object StaticProperty(this Type type, string name)
+        public static object? StaticProperty(this Type type, string name)
         {
             return type.GetTypeInfo().InvokeMember(
                 name,
@@ -192,7 +192,7 @@ namespace CommandLine.Core
                 new object[] { });
         }
 
-        public static object InstanceProperty(this Type type, string name, object target)
+        public static object? InstanceProperty(this Type type, string name, object target)
         {
             return type.GetTypeInfo().InvokeMember(
                 name,

@@ -38,7 +38,7 @@ namespace ReadText.Demo
 
         public string FileName { get; set; }
 
-        [Usage(ApplicationAlias = "ReadText.Demo.exe")]
+        [Usage("ReadText.Demo.exe")]
         public static IEnumerable<Example> Examples
         {
             get

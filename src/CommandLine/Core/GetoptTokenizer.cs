@@ -3,10 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommandLine.Infrastructure;
 using CSharpx;
 using RailwaySharp.ErrorHandling;
-using System.Text.RegularExpressions;
 
 namespace CommandLine.Core
 {
@@ -16,7 +14,7 @@ namespace CommandLine.Core
             IEnumerable<string> arguments,
             Func<string, NameLookupResult> nameLookup)
         {
-            return GetoptTokenizer.Tokenize(arguments, nameLookup, ignoreUnknownArguments:false, allowDashDash:true, posixlyCorrect:false);
+            return Tokenize(arguments, nameLookup, ignoreUnknownArguments:false, allowDashDash:true, posixlyCorrect:false);
         }
 
         public static Result<IEnumerable<Token>, Error> Tokenize(
@@ -130,8 +128,8 @@ namespace CommandLine.Core
         {
             return (arguments, optionSpecs) =>
                 {
-                    var tokens = GetoptTokenizer.Tokenize(arguments, name => NameLookup.Contains(name, optionSpecs, nameComparer), ignoreUnknownArguments, enableDashDash, posixlyCorrect);
-                    var explodedTokens = GetoptTokenizer.ExplodeOptionList(tokens, name => NameLookup.HavingSeparator(name, optionSpecs, nameComparer));
+                    var tokens = Tokenize(arguments, name => NameLookup.Contains(name, optionSpecs, nameComparer), ignoreUnknownArguments, enableDashDash, posixlyCorrect);
+                    var explodedTokens = ExplodeOptionList(tokens, name => NameLookup.HavingSeparator(name, optionSpecs, nameComparer));
                     return explodedTokens;
                 };
         }
@@ -194,7 +192,7 @@ namespace CommandLine.Core
         {
             string[] parts = arg.Substring(2).Split(new char[] { '=' }, 2);
             string name = parts[0];
-            string value = (parts.Length > 1) ? parts[1] : null;
+            var value = parts.Length > 1 ? parts[1] : null;
             // A parameter like "--stringvalue=" is acceptable, and makes stringvalue be the empty string
             if (String.IsNullOrWhiteSpace(name) || name.Contains(" "))
             {

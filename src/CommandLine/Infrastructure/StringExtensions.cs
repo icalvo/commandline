@@ -14,13 +14,13 @@ namespace CommandLine.Infrastructure
             return new string(c, 1);
         }
 
-        public static string ToStringInvariant<T>(this T value)
+        public static string? ToStringInvariant<T>(this T value)
         {
             return Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
         [StringFormatMethod("value")]
-        public static string ToStringLocal<T>(this T value)
+        public static string? ToStringLocal<T>(this T value)
         {
             return Convert.ToString(value, CultureInfo.CurrentCulture);
         }
@@ -78,7 +78,7 @@ namespace CommandLine.Infrastructure
             return value.Equals("true", StringComparison.OrdinalIgnoreCase);
         }
 
-        public static bool ToBooleanLoose(this string value)
+        public static bool ToBooleanLoose(this string? value)
         {
             if ((string.IsNullOrEmpty(value)) ||
                 (value == "0") ||

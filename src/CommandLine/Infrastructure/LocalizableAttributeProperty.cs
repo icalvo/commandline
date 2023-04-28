@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace CommandLine.Infrastructure
 {
     internal class LocalizableAttributeProperty
     {
         private string _propertyName;
-        private string _value;
-        private Type _type;
-        private PropertyInfo _localizationPropertyInfo;
+        private string? _value;
+        private Type? _type;
+        private PropertyInfo? _localizationPropertyInfo;
 
         public LocalizableAttributeProperty(string propertyName)
         {
             _propertyName = propertyName;
         }
 
-        public string Value
+        public string? Value
         {
             get { return GetLocalizedValue(); }
             set
@@ -28,7 +25,7 @@ namespace CommandLine.Infrastructure
             }
         }
 
-        public Type ResourceType
+        public Type? ResourceType
         {
             set
             {
@@ -37,7 +34,7 @@ namespace CommandLine.Infrastructure
             }
         }
 
-        private string GetLocalizedValue()
+        private string? GetLocalizedValue()
         {
             if (String.IsNullOrEmpty(_value) || _type == null)
                 return _value;
@@ -46,12 +43,15 @@ namespace CommandLine.Infrastructure
                 // Static class IsAbstract 
                 if (!_type.IsVisible)
                     throw new ArgumentException($"Invalid resource type '{_type.FullName}'! {_type.Name} is not visible for the parser! Change resources 'Access Modifier' to 'Public'", _propertyName);
-                PropertyInfo propertyInfo = _type.GetProperty(_value, BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static);
+                PropertyInfo? propertyInfo = _type.GetProperty(
+                    _value,
+                    BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Static);
                 if (propertyInfo == null || !propertyInfo.CanRead || propertyInfo.PropertyType != typeof(string))
                     throw new ArgumentException("Invalid resource property name! Localized value: {_value}", _propertyName);
                 _localizationPropertyInfo = propertyInfo;
             }
-            return (string)_localizationPropertyInfo.GetValue(null, null);
+
+            return (string?)_localizationPropertyInfo.GetValue(null, null);
         }
     }
 

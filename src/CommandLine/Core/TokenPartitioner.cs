@@ -46,7 +46,7 @@ namespace CommandLine.Core
             var max = new Dictionary<Token, Maybe<int>>();
             var state = SequenceState.TokenSearch;
             var separatorSeen = false;
-            Token nameToken = null;
+            Token? nameToken = null;
             foreach (var token in tokens)
             {
                 if (token.IsValueForced())

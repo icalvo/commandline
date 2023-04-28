@@ -249,7 +249,7 @@ namespace CommandLine
 
         private static object FormatWithQuotesIfString(object value)
         {
-            string s = value.ToString();
+            var s = value.ToString();
             if (!string.IsNullOrEmpty(s) && !s.Contains("\"") && s.Contains(" "))
                 return $"\"{s}\"";
 
@@ -291,7 +291,7 @@ namespace CommandLine
             return optionSpec.FlagCounter ? String.Join(" ", Enumerable.Repeat(formattedName, (int)value)) : formattedName;
         }
 
-        private static object NormalizeValue(this object value)
+        private static object? NormalizeValue(this object? value)
         {
 #if !SKIP_FSHARP
             if (value != null

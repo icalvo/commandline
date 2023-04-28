@@ -79,8 +79,7 @@ namespace CommandLine.Tests.Fakes
         [Option("secert-option", Hidden = true, HelpText = "This is a description for a secert hidden option that should never be visibile to the user via help text.")]
         public string SecertOption { get; set; }
 
-        [ Custom
-        , Usage(ApplicationAlias = "mono testapp.exe")
+        [ Custom, Usage("mono testapp.exe")
         ]
         public static IEnumerable<Example> Examples
         {
@@ -122,7 +121,7 @@ namespace CommandLine.Tests.Fakes
         [Option("secert-option", Hidden = true, HelpText = "This is a description for a secert hidden option that should never be visibile to the user via help text.")]
         public string SecertOption { get; set; }
 
-        [Usage(ApplicationAlias = "git")]
+        [Usage("git")]
         public static IEnumerable<Example> Examples
         {
             get
@@ -145,7 +144,7 @@ namespace CommandLine.Tests.Fakes
         [Option("secert-option", Hidden = true, HelpText = "This is a description for a secert hidden option that should never be visibile to the user via help text.")]
         public string SecertOption { get; set; }
 
-        [Usage(ApplicationAlias = "git")]
+        [Usage("git")]
         public static IEnumerable<Example> Examples
         {
             get
@@ -173,7 +172,7 @@ namespace CommandLine.Tests.Fakes
             HelpText = "A list of url(s) to clone.")]
         public IEnumerable<string> Urls { get; set; }
 
-        [Usage(ApplicationAlias = "git")]
+        [Usage("git")]
         public static IEnumerable<Example> Examples
         {
             get

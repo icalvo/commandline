@@ -60,7 +60,7 @@ namespace CommandLine.Core
         {
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as Name;
             if (other != null)
@@ -76,7 +76,7 @@ namespace CommandLine.Core
             return new {Tag, Text}.GetHashCode();
         }
 
-        public bool Equals(Name other)
+        public bool Equals(Name? other)
         {
             if (other == null)
             {
@@ -135,7 +135,7 @@ namespace CommandLine.Core
             get { return forced; }
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as Value;
             if (other != null)
@@ -151,7 +151,7 @@ namespace CommandLine.Core
             return new { Tag, Text }.GetHashCode();
         }
 
-        public bool Equals(Value other)
+        public bool Equals(Value? other)
         {
             if (other == null)
             {

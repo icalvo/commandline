@@ -1,4 +1,5 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace CommandLine
         /// <param name="action">The <see cref="Func{T, Task}"/> to execute.</param>
         /// <returns>The same <paramref name="result"/> instance as a <see cref="Task"/> instance.</returns>
         public static async Task<ParserResult<T>> WithParsedAsync<T>(this ParserResult<T> result, Func<T, Task> action)
+            where T : notnull
         {
             if (result is Parsed<T> parsed)
             {

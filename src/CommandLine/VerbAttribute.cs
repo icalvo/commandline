@@ -1,7 +1,7 @@
 ﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
 
 using System;
-using System.Collections.Generic;
+using CommandLine.Infrastructure;
 
 namespace CommandLine
 {
@@ -12,8 +12,8 @@ namespace CommandLine
     //public sealed class VerbAttribute : Attribute
     public class VerbAttribute : Attribute
     {
-        private readonly Infrastructure.LocalizableAttributeProperty helpText;
-        private Type resourceType;
+        private readonly LocalizableAttributeProperty helpText;
+        private Type? resourceType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.VerbAttribute"/> class.
@@ -22,13 +22,13 @@ namespace CommandLine
         /// <param name="isDefault">Whether the verb is the default verb.</param>
         /// <param name="aliases">aliases for this verb. i.e. "move" and "mv"</param>
         /// <exception cref="System.ArgumentException">Thrown if <paramref name="name"/> is null, empty or whitespace and <paramref name="isDefault"/> is false.</exception>
-        public VerbAttribute(string name, bool isDefault = false, string[] aliases = null)
+        public VerbAttribute(string name, bool isDefault = false, string[]? aliases = null)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("name");
 
             Name = name;
             IsDefault = isDefault;
-            helpText = new Infrastructure.LocalizableAttributeProperty(nameof(HelpText));
+            helpText = new LocalizableAttributeProperty(nameof(HelpText));
             resourceType = null;
             Aliases = aliases ?? new string[0];
         }
@@ -58,7 +58,7 @@ namespace CommandLine
         /// <summary>
         /// Gets or sets the <see cref="System.Type"/> that contains the resources for <see cref="HelpText"/>.
         /// </summary>
-        public Type ResourceType
+        public Type? ResourceType
         {
             get => resourceType;
             set => resourceType = helpText.ResourceType = value;

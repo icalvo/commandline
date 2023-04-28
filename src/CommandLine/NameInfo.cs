@@ -87,7 +87,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="System.Object"/>.</param>
         /// <returns><value>true</value> if the specified <see cref="System.Object"/> is equal to the current <see cref="System.Object"/>; otherwise, <value>false</value>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as NameInfo;
             if (other != null)
@@ -109,7 +109,7 @@ namespace CommandLine
         /// </summary>
         /// <param name="other">The <see cref="CommandLine.NameInfo"/> instance to compare.</param>
         /// <returns><value>true</value> if this instance of <see cref="CommandLine.NameInfo"/> and <paramref name="other"/> have the same value; otherwise, <value>false</value>.</returns>
-        public bool Equals(NameInfo other)
+        public bool Equals(NameInfo? other)
         {
             if (other == null)
             {

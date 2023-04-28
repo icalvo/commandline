@@ -82,8 +82,7 @@ namespace CommandLine.Core
 
         private static ParserResult<object> MatchDefaultVerb(
             Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
-            IEnumerable<Tuple<Verb, Type>> verbs,
-            Tuple<Verb, Type> defaultVerb,
+            IEnumerable<Tuple<Verb, Type>> verbs, Tuple<Verb, Type>? defaultVerb,
             IEnumerable<string> arguments,
             StringComparer nameComparer,
             bool ignoreValueCase,
@@ -92,7 +91,7 @@ namespace CommandLine.Core
             bool autoVersion,
             IEnumerable<ErrorType> nonFatalErrors)
         {
-            return !(defaultVerb is null)
+            return defaultVerb is not null
                 ? InstanceBuilder.Build(
                     Maybe.Just<Func<object>>(() => defaultVerb.Item2.AutoDefault()),
                     tokenizer,
@@ -108,8 +107,7 @@ namespace CommandLine.Core
 
         private static ParserResult<object> MatchVerb(
             Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
-            IEnumerable<Tuple<Verb, Type>> verbs,
-            Tuple<Verb, Type> defaultVerb,
+            IEnumerable<Tuple<Verb, Type>> verbs, Tuple<Verb, Type>? defaultVerb,
             IEnumerable<string> arguments,
             StringComparer nameComparer,
             bool ignoreValueCase,

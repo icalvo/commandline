@@ -25,8 +25,8 @@ namespace CommandLine.Text
         public bool Required;
         public bool IsOption;
         public bool IsValue;
-        public string[] LongNames;
-        public string ShortName;
+        public string?[] LongNames;
+        public string? ShortName;
         public int Index;
     }
 
@@ -37,11 +37,11 @@ namespace CommandLine.Text
 
         ComparableOption ToComparableOption(Specification spec, int index)
         {
-            OptionSpecification option = spec as OptionSpecification;
-            ValueSpecification value = spec as ValueSpecification;
+            var option = spec as OptionSpecification;
+            var value = spec as ValueSpecification;
             bool required = option?.Required ?? false;
 
-            return new ComparableOption()
+            return new ComparableOption
             {
                 Required = required,
                 IsOption = option != null,
@@ -53,7 +53,7 @@ namespace CommandLine.Text
         }
 
 
-        public Comparison<ComparableOption> OptionComparison { get; set; } = null;
+        public Comparison<ComparableOption>? OptionComparison { get; set; } = null;
 
         public static Comparison<ComparableOption> RequiredThenAlphaComparison = (ComparableOption attr1, ComparableOption attr2) =>
        {
@@ -116,7 +116,7 @@ namespace CommandLine.Text
         private string heading;
         private string copyright;
         private bool additionalNewLineAfterOption;
-        private StringBuilder optionsHelp;
+        private StringBuilder? optionsHelp;
         private bool addDashesToOption;
         private bool addEnumValuesToHelpText;
         private bool autoHelp;
@@ -767,8 +767,8 @@ namespace CommandLine.Text
         {
             const int ExtraLength = 10;
 
-            var sbLength = heading.SafeLength() + copyright.SafeLength() + preOptionsHelp.SafeLength()
-                    + optionsHelp.SafeLength() + postOptionsHelp.SafeLength() + ExtraLength;
+            var sbLength = heading.SafeLength() + copyright.SafeLength() + preOptionsHelp.SafeLength() +
+                           (optionsHelp?.SafeLength() ?? 0) + postOptionsHelp.SafeLength() + ExtraLength;
             var result = new StringBuilder(sbLength);
 
             result.Append(heading)
@@ -778,17 +778,17 @@ namespace CommandLine.Text
                     .AppendWhen(preOptionsHelp.SafeLength() > 0,
                         NewLineIfNeededBefore(preOptionsHelp),
                         Environment.NewLine,
-                        preOptionsHelp.ToString())
-                    .AppendWhen(optionsHelp.SafeLength() > 0,
+                        preOptionsHelp.ToString()).AppendWhen(
+                        (optionsHelp?.SafeLength() ?? 0) > 0,
                         Environment.NewLine,
                         Environment.NewLine,
-                        optionsHelp.SafeToString())
+                        optionsHelp?.SafeToString())
                     .AppendWhen(postOptionsHelp.SafeLength() > 0,
                         NewLineIfNeededBefore(postOptionsHelp),
                         Environment.NewLine,
                         postOptionsHelp.ToString());
 
-            string NewLineIfNeededBefore(StringBuilder sb)
+            string? NewLineIfNeededBefore(StringBuilder sb)
             {
                 if (AddNewLineBetweenHelpSections
                         && result.Length > 0
@@ -825,8 +825,10 @@ namespace CommandLine.Text
             builder.Append(TextWrapper.WrapAndIndentText(value, 0, maximumLength));
         }
 
-        private IEnumerable<Specification> GetSpecificationsFromType(Type type)
+        private IEnumerable<Specification> GetSpecificationsFromType(Type? type)
         {
+            if (type == null) return Enumerable.Empty<Specification>();
+
             var specs = type.GetSpecifications(Specification.FromProperty);
             var optionSpecs = specs
                 .OfType<OptionSpecification>();
@@ -843,7 +845,7 @@ namespace CommandLine.Text
                 .Concat(valueSpecs);
         }
 
-        private static Maybe<Tuple<UsageAttribute, IEnumerable<Example>>> GetUsageFromType(Type type)
+        private static Maybe<Tuple<UsageAttribute, IEnumerable<Example>>> GetUsageFromType(Type? type)
         {
             return type.GetUsageData().Map(
                 tuple =>
@@ -851,8 +853,12 @@ namespace CommandLine.Text
                     var prop = tuple.Item1;
                     var attr = tuple.Item2;
 
-                    var examples = (IEnumerable<Example>)prop
-                        .GetValue(null, BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
+                    var examples = (IEnumerable<Example>)prop.GetValue(
+                        null,
+                        BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty,
+                        null,
+                        null,
+                        null)!;
 
                     return Tuple.Create(attr, examples);
                 });
@@ -949,7 +955,7 @@ namespace CommandLine.Text
 
         private HelpText AddOption(string requiredWord, string optionGroupWord, int maxLength, Specification specification, int widthOfHelpText)
         {
-            OptionSpecification GetOptionGroupSpecification()
+            OptionSpecification? GetOptionGroupSpecification()
             {
                 if (specification.Tag == SpecificationType.Option &&
                     specification is OptionSpecification optionSpecification &&
@@ -967,7 +973,7 @@ namespace CommandLine.Text
             if (specification.Hidden)
                 return this;
 
-            optionsHelp.Append("  ");
+            optionsHelp!.Append("  ");
             var name = new StringBuilder(maxLength)
                 .BimapIf(
                     specification.Tag == SpecificationType.Option,
@@ -984,7 +990,7 @@ namespace CommandLine.Text
                 optionHelpText += " Valid values: " + string.Join(CommaSeparation, specification.EnumValues);
 
             specification.DefaultValue.Do(
-                defaultValue => optionHelpText = "(Default: {0}) ".FormatInvariant(FormatDefaultValue(defaultValue)) + optionHelpText);
+                defaultValue => optionHelpText = $"(Default: {FormatDefaultValue(defaultValue)}) {optionHelpText}");
 
             var optionGroupSpecification = GetOptionGroupSpecification();
 
@@ -1124,19 +1130,20 @@ namespace CommandLine.Text
                 metaLength = spec.MetaValue.Length + 1;
 
             if (hasMeta)
-                specLength += spec.MetaName.Length + spec.Index.ToStringInvariant().Length + 8; //METANAME (pos. N)
+                specLength +=
+                    spec.MetaName.Length + (spec.Index.ToStringInvariant()?.Length ?? 0) + 8; //METANAME (pos. N)
             else
-                specLength += spec.Index.ToStringInvariant().Length + 11; // "value pos. N"
+                specLength += (spec.Index.ToStringInvariant()?.Length ?? 0) + 11; // "value pos. N"
 
             specLength += metaLength;
 
             return specLength;
         }
 
-        private static string FormatDefaultValue<T>(T value)
+        private static string? FormatDefaultValue<T>(T value)
         {
             if (value is bool)
-                return value.ToStringLocal().ToLowerInvariant();
+                return value.ToStringLocal()?.ToLowerInvariant();
 
             if (value is string)
                 return value.ToStringLocal();

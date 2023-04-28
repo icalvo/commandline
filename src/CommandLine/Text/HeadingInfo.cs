@@ -16,7 +16,7 @@ namespace CommandLine.Text
     public class HeadingInfo
     {
         private readonly string programName;
-        private readonly string version;
+        private readonly string? version;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandLine.Text.HeadingInfo"/> class
@@ -25,7 +25,7 @@ namespace CommandLine.Text
         /// <param name="programName">The name of the program.</param>
         /// <param name="version">The version of the program.</param>
         /// <exception cref="System.ArgumentException">Thrown when parameter <paramref name="programName"/> is null or empty string.</exception>
-        public HeadingInfo(string programName, string version = null)
+        public HeadingInfo(string programName, string? version = null)
         {
             if (string.IsNullOrWhiteSpace("programName")) throw new ArgumentException("programName");
 
@@ -58,7 +58,7 @@ namespace CommandLine.Text
                 var title = ReflectionHelper.GetAttribute<AssemblyTitleAttribute>()
                     .MapValueOrDefault(
                         titleAttribute => titleAttribute.Title,
-                        ReflectionHelper.GetAssemblyName());
+                        ReflectionHelper.GetAssemblyName()) ?? "";
 
                 var version = ReflectionHelper.GetAttribute<AssemblyInformationalVersionAttribute>()
                     .MapValueOrDefault(
@@ -84,11 +84,10 @@ namespace CommandLine.Text
         /// <returns>The <see cref="System.String"/> that contains the heading.</returns>
         public override string ToString()
         {
-            var isVersionNull = string.IsNullOrEmpty(version);
-            return new StringBuilder(programName.Length +
-                    (!isVersionNull ? version.Length + 1 : 0))
-                .Append(programName)
-                .AppendWhen(!isVersionNull, " ", version)
+            if (string.IsNullOrEmpty(version))
+                return new StringBuilder(programName.Length).Append(programName).ToString();
+
+            return new StringBuilder(programName.Length + version.Length + 1).Append($"{programName} {version}")
                 .ToString();
         }
 

@@ -11,11 +11,11 @@ namespace CommandLine.Core
         private readonly Maybe<int> maxItems;
         private readonly Maybe<TypeDescriptor> nextValue;
 
-        private TypeDescriptor(TargetType targetType, Maybe<int> maxItems, Maybe<TypeDescriptor> nextValue = null)
+        private TypeDescriptor(TargetType targetType, Maybe<int> maxItems, Maybe<TypeDescriptor>? nextValue = null)
         {
             this.targetType = targetType;
             this.maxItems = maxItems;
-            this.nextValue = nextValue;
+            this.nextValue = nextValue ?? Maybe.Nothing<TypeDescriptor>();
         }
 
         public TargetType TargetType
