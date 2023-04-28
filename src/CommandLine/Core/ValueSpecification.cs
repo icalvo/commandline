@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using CSharpx;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -35,7 +35,7 @@ internal sealed class ValueSpecification : Specification
             attribute.Required,
             attribute.Min == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Min),
             attribute.Max == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Max),
-            attribute.Default.ToMaybe(),
+            attribute.Default.AsMaybe(),
             attribute.HelpText,
             attribute.MetaValue,
             enumValues,

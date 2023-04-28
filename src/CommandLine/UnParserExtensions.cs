@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using CommandLine.Core;
 using CommandLine.Infrastructure;
-using CSharpx;
 
 namespace CommandLine;
 
@@ -252,14 +251,14 @@ public static class UnParserExtensions
 
         Func<string, string> doubQt = v => v.Contains("\"") ? v.Replace("\"", "\\\"") : v;
 
-        return s.ToMaybe().MapValueOrDefault(
+        return s.AsMaybe().MapValueOrDefault(
             v => v.Contains(' ') || v.Contains("\"") ? "\"".JoinTo(doubQt(v), "\"") : v,
             value);
     }
 
     private static char SeperatorOrSpace(this Specification spec)
     {
-        return (spec as OptionSpecification).ToMaybe()
+        return (spec as OptionSpecification).AsMaybe()
             .MapValueOrDefault(o => o.Separator != '\0' ? o.Separator : ' ', ' ');
     }
 

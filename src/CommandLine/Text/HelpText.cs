@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using CommandLine.Core;
 using CommandLine.Infrastructure;
-using CSharpx;
+using SharpX;
 
 namespace CommandLine.Text;
 
@@ -364,7 +364,7 @@ public class HelpText
             .Do(license => license.AddToHelpText(auto, true));
 
         var usageAttr = ReflectionHelper.GetAttribute<AssemblyUsageAttribute>();
-        var usageLines = RenderUsageTextAsLines(parserResult, onExample).ToMaybe();
+        var usageLines = RenderUsageTextAsLines(parserResult, onExample).AsMaybe();
 
         if (usageAttr.IsJust() || usageLines.IsJust())
         {

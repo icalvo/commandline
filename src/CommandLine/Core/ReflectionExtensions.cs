@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using CommandLine.Infrastructure;
 using CommandLine.Text;
-using CSharpx;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -29,7 +29,7 @@ internal static class ReflectionExtensions
         return (from attr in type.FlattenHierarchy()
                 .SelectMany(x => x.GetTypeInfo().GetCustomAttributes(typeof(VerbAttribute), true))
             let vattr = (VerbAttribute)attr
-            select vattr).SingleOrDefault().ToMaybe();
+            select vattr).SingleOrDefault().AsMaybe();
     }
 
     public static Maybe<Tuple<PropertyInfo, UsageAttribute>> GetUsageData(this Type? type)
@@ -37,7 +37,7 @@ internal static class ReflectionExtensions
         return (from pi in type.FlattenHierarchy().SelectMany(x => x.GetTypeInfo().GetProperties())
             let attrs = pi.GetCustomAttributes(typeof(UsageAttribute), true)
             where attrs.Any()
-            select Tuple.Create(pi, (UsageAttribute)attrs.First())).SingleOrDefault().ToMaybe();
+            select Tuple.Create(pi, (UsageAttribute)attrs.First())).SingleOrDefault().AsMaybe();
     }
 
     private static IEnumerable<Type> FlattenHierarchy(this Type? type)

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine.Core;
-using CSharpx;
+using SharpX;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core;
@@ -29,7 +29,7 @@ public class TokenPartitionerTests
                 Maybe.Nothing<int>(),
                 Maybe.Nothing<int>(),
                 '\0',
-                null,
+                Maybe.Nothing<object>(),
                 string.Empty,
                 string.Empty,
                 new List<string>(),
@@ -44,7 +44,7 @@ public class TokenPartitionerTests
                 Maybe.Just(3),
                 Maybe.Just(4),
                 '\0',
-                null,
+                Maybe.Nothing<object>(),
                 string.Empty,
                 string.Empty,
                 new List<string>(),
@@ -83,7 +83,7 @@ public class TokenPartitionerTests
                 Maybe.Nothing<int>(),
                 Maybe.Nothing<int>(),
                 '\0',
-                null,
+                Maybe.Nothing<object>(),
                 string.Empty,
                 string.Empty,
                 new List<string>(),
@@ -98,7 +98,7 @@ public class TokenPartitionerTests
                 Maybe.Just(3),
                 Maybe.Just(4),
                 '\0',
-                null,
+                Maybe.Nothing<object>(),
                 string.Empty,
                 string.Empty,
                 new List<string>(),

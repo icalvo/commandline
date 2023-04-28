@@ -4,8 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -149,8 +148,7 @@ internal static class InstanceChooser
     {
         return verb.Length > 0
             ? verbs.SingleOrDefault(
-                    v => v.Item1.Aliases.Prepend(v.Item1.Name).Any(alias => nameComparer.Equals(alias, verb)))
-                .ToMaybe()
+                    v => v.Item1.Aliases.Prepend(v.Item1.Name).Any(alias => nameComparer.Equals(alias, verb))).AsMaybe()
                 .MapValueOrDefault(
                     v => (Error)new HelpVerbRequestedError(v.Item1.Name, v.Item2, true),
                     new HelpVerbNotFoundError(verb))

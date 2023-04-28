@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CommandLine.Core;
 using CommandLine.Tests.Fakes;
-using CSharpx;
+using SharpX;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core;

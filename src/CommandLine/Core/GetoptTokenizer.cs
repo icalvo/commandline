@@ -3,8 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -18,30 +17,34 @@ internal static class GetoptTokenizer
         Func<string, NameLookupResult> nameLookup, bool ignoreUnknownArguments, bool allowDashDash, bool posixlyCorrect)
     {
         var errors = new List<Error>();
-        Action<string> onBadFormatToken = arg => errors.Add(new BadFormatTokenError(arg));
-        Action<string> unknownOptionError = name => errors.Add(new UnknownOptionError(name));
-        Action<string> doNothing = name => { };
-        var onUnknownOption = ignoreUnknownArguments ? doNothing : unknownOptionError;
+        void OnBadFormatToken(string arg) => errors.Add(new BadFormatTokenError(arg));
+        void UnknownOptionError(string name) => errors.Add(new UnknownOptionError(name));
+
+        void DoNothing(string name)
+        {
+        }
+
+        var onUnknownOption = ignoreUnknownArguments ? (Action<string>)DoNothing : UnknownOptionError;
 
         var consumeNext = 0;
-        Action<int> onConsumeNext = n => consumeNext = consumeNext + n;
+        void OnConsumeNext(int n) => consumeNext += n;
         var forceValues = false;
 
         var tokens = new List<Token>();
 
-        var enumerator = arguments.GetEnumerator();
+        using var enumerator = arguments.GetEnumerator();
         while (enumerator.MoveNext())
             switch (enumerator.Current) {
                 case null:
                     break;
 
-                case string arg when forceValues:
+                case var arg when forceValues:
                     tokens.Add(Token.ValueForced(arg));
                     break;
 
-                case string arg when consumeNext > 0:
+                case var arg when consumeNext > 0:
                     tokens.Add(Token.Value(arg));
-                    consumeNext = consumeNext - 1;
+                    consumeNext -= 1;
                     break;
 
                 case "--" when allowDashDash:
@@ -59,16 +62,16 @@ internal static class GetoptTokenizer
                     if (posixlyCorrect) forceValues = true;
                     break;
 
-                case string arg when arg.StartsWith("--"):
+                case var arg when arg.StartsWith("--"):
                     tokens.AddRange(
-                        TokenizeLongName(arg, nameLookup, onBadFormatToken, onUnknownOption, onConsumeNext));
+                        TokenizeLongName(arg, nameLookup, OnBadFormatToken, onUnknownOption, OnConsumeNext));
                     break;
 
-                case string arg when arg.StartsWith("-"):
-                    tokens.AddRange(TokenizeShortName(arg, nameLookup, onUnknownOption, onConsumeNext));
+                case var arg when arg.StartsWith("-"):
+                    tokens.AddRange(TokenizeShortName(arg, nameLookup, onUnknownOption, OnConsumeNext));
                     break;
 
-                case string arg:
+                case var arg:
                     // If we get this far, it's a plain value
                     tokens.Add(Token.Value(arg));
                     if (posixlyCorrect) forceValues = true;
@@ -83,10 +86,11 @@ internal static class GetoptTokenizer
     {
         var tokens = tokenizerResult.SucceededWith().Memoize();
 
-        var exploded = new List<Token>(tokens is ICollection<Token> coll ? coll.Count : tokens.Count());
+        var tokensArray = tokens ?? tokens.ToArray();
+        var exploded = new List<Token>(tokens is ICollection<Token> coll ? coll.Count : tokensArray.Count());
         var nothing = Maybe.Nothing<char>(); // Re-use same Nothing instance for efficiency
         var separator = nothing;
-        foreach (Token token in tokens)
+        foreach (Token token in tokensArray)
             if (token.IsName())
             {
                 separator = optionSequenceWithSeparatorLookup(token.Text);

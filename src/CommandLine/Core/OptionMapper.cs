@@ -3,8 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -22,7 +21,7 @@ internal static class OptionMapper
                     s => s.Key.MatchName(
                         ((OptionSpecification)pt.Specification).ShortName,
                         ((OptionSpecification)pt.Specification).LongNames,
-                        comparer)).ToMaybe();
+                        comparer)).AsMaybe();
                 if (matched.IsJust())
                 {
                     var matches =
@@ -51,8 +50,8 @@ internal static class OptionMapper
 
                 return Tuple.Create(pt, Maybe.Nothing<Error>());
             }).Memoize();
-        return Result.Succeed(
+        return Result<IEnumerable<SpecificationProperty>, Error>.Succeed(
             sequencesAndErrors.Select(se => se.Item1),
-            sequencesAndErrors.Select(se => se.Item2).OfType<Just<Error>>().Select(se => se.Value));
+            sequencesAndErrors.Select(se => se.Item2).OnlyJust());
     }
 }

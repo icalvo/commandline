@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 using CommandLine.Core;
-using CSharpx;
 using FluentAssertions;
+using SharpX;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core;
@@ -26,7 +26,7 @@ public class NameLookupTests
                 Maybe.Nothing<int>(),
                 Maybe.Nothing<int>(),
                 '.',
-                null,
+                Maybe.Nothing<object>(),
                 string.Empty,
                 string.Empty,
                 new List<string>(),
@@ -59,7 +59,7 @@ public class NameLookupTests
             Maybe.Nothing<int>(),
             Maybe.Nothing<int>(),
             '.',
-            null,
+            Maybe.Nothing<object>(),
             string.Empty,
             string.Empty,
             new List<string>(),

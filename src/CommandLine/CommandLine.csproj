@@ -33,6 +33,7 @@
 
 	<ItemGroup Condition="'$(BuildTarget)' != 'fsharp'">
 		<Compile Remove="Infrastructure\FSharpOptionHelper.cs" />
+		<Compile Remove="Infrastructure\CSharpx\Either.cs"/>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -58,9 +59,7 @@
 		<None Include="..\..\art\CommandLine20.png" Pack="true" PackagePath="$(PackageIcon)"/>
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Infrastructure\CSharpx\"/>
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="JetBrains.Annotations" Version="2022.1.0"/>
+		<PackageReference Include="SharpX" Version="6.1.0"/>
 	</ItemGroup>
 </Project>

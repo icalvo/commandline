@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharpx;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -67,7 +67,7 @@ internal sealed class OptionSpecification : Specification
             attribute.Min == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Min),
             attribute.Max == -1 ? Maybe.Nothing<int>() : Maybe.Just(attribute.Max),
             attribute.Separator,
-            attribute.Default.ToMaybe(),
+            attribute.Default.AsMaybe(),
             attribute.HelpText,
             attribute.MetaValue,
             enumValues,

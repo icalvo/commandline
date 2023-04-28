@@ -6,8 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using CommandLine.Infrastructure;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 
 namespace CommandLine.Core;
 

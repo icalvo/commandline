@@ -2,9 +2,8 @@
 using System.Linq;
 using CommandLine.Core;
 using CommandLine.Tests.Fakes;
-using CSharpx;
 using FluentAssertions;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 using Xunit;
 
 namespace CommandLine.Tests.Unit;

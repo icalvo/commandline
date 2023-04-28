@@ -6,8 +6,7 @@ using System.IO;
 using System.Linq;
 using CommandLine.Core;
 using CommandLine.Text;
-using CSharpx;
-using RailwaySharp.ErrorHandling;
+using SharpX;
 
 namespace CommandLine;
 
@@ -214,7 +213,7 @@ public class Parser : IDisposable
         int maxDisplayWidth)
     {
         parserResult.WithNotParsed(
-            errors => Maybe.Merge(errors.ToMaybe(), helpWriter.ToMaybe()).Do(
+            errors => Maybe.Merge(errors.AsMaybe(), helpWriter.AsMaybe()).Do(
                 (_, writer) => writer?.Write(HelpText.AutoBuild(parserResult, maxDisplayWidth))));
 
         return parserResult;

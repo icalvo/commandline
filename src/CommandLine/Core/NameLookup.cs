@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSharpx;
+using SharpX;
 
 namespace CommandLine.Core;
 
@@ -31,7 +31,7 @@ internal static class NameLookup
         StringComparer comparer)
     {
         return specifications.SingleOrDefault(
-                a => name.MatchName(a.ShortName, a.LongNames, comparer) && a.Separator != '\0').ToMaybe()
+                a => name.MatchName(a.ShortName, a.LongNames, comparer) && a.Separator != '\0').AsMaybe()
             .MapValueOrDefault(spec => Maybe.Just(spec.Separator), Maybe.Nothing<char>());
     }
 }
