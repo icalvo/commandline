@@ -86,7 +86,7 @@ internal static class GetoptTokenizer
     {
         var tokens = tokenizerResult.SucceededWith().Memoize();
 
-        var tokensArray = tokens ?? tokens.ToArray();
+        var tokensArray = tokens;
         var exploded = new List<Token>(tokens is ICollection<Token> coll ? coll.Count : tokensArray.Count());
         var nothing = Maybe.Nothing<char>(); // Re-use same Nothing instance for efficiency
         var separator = nothing;
