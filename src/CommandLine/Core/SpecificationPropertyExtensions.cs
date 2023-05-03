@@ -9,31 +9,9 @@ namespace CommandLine.Core;
 
 internal static class SpecificationPropertyExtensions
 {
-    public static SpecificationProperty WithSpecification(this SpecificationProperty specProp,
-        Specification newSpecification)
-    {
-        if (newSpecification == null) throw new ArgumentNullException(nameof(newSpecification));
-
-        return SpecificationProperty.Create(newSpecification, specProp.Property, specProp.Value);
-    }
-
     public static SpecificationProperty WithValue(this SpecificationProperty specProp, Maybe<object> newValue)
     {
-        if (newValue == null) throw new ArgumentNullException(nameof(newValue));
-
         return SpecificationProperty.Create(specProp.Specification, specProp.Property, newValue);
-    }
-
-    public static Type GetConversionType(this SpecificationProperty specProp)
-    {
-        switch (specProp.Specification.TargetType)
-        {
-            case TargetType.Sequence:
-                return specProp.Property.PropertyType.UnderlyingSequenceType().FromJustOrFail(
-                    new InvalidOperationException("Sequence properties should be of type IEnumerable<T> or T[]."));
-            default:
-                return specProp.Property.PropertyType;
-        }
     }
 
     public static IEnumerable<Error> Validate(this IEnumerable<SpecificationProperty> specProps,

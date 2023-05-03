@@ -1,13 +1,24 @@
-#top-most EditorConfig for project
 root = true
+#top-most EditorConfig for project
 
 [*]
 end_of_line = crlf
 insert_final_newline = true
 
+# Microsoft .NET properties
+csharp_new_line_between_query_expression_clauses = true
+
+# ReSharper properties
+resharper_csharp_wrap_after_declaration_lpar = true
+resharper_wrap_linq_expressions = chop_always
+
 [*.cs]
 indent_style = space
 indent_size = 4
+
+# ReSharper properties
+resharper_csharp_wrap_parameters_style = chop_if_long
+resharper_max_formal_parameters_on_line = 1
 
 [*.{xml,csproj,config}]
 indent_style = tab

@@ -85,11 +85,11 @@ public abstract class MultilineTextAttribute : Attribute
         if (line4 == null) throw new ArgumentException("line4");
         if (line5 == null) throw new ArgumentException("line5");
 
-        this.Line1 = line1;
-        this.Line2 = line2;
-        this.Line3 = line3;
-        this.Line4 = line4;
-        this.Line5 = line5;
+        Line1 = line1;
+        Line2 = line2;
+        Line3 = line3;
+        Line4 = line4;
+        Line5 = line5;
     }
 
     /// <summary>

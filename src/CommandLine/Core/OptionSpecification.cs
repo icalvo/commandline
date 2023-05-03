@@ -9,10 +9,23 @@ namespace CommandLine.Core;
 
 internal sealed class OptionSpecification : Specification
 {
-    public OptionSpecification(string shortName, string longName, bool required, string setName, Maybe<int> min,
-        Maybe<int> max, char separator, Maybe<object> defaultValue, string helpText, string metaValue,
-        IEnumerable<string> enumValues, Type conversionType, TargetType targetType, string group,
-        bool flagCounter = false, bool hidden = false) : base(
+    public OptionSpecification(
+        string shortName,
+        string longName,
+        bool required,
+        string setName,
+        Maybe<int> min,
+        Maybe<int> max,
+        char separator,
+        Maybe<object> defaultValue,
+        string helpText,
+        string metaValue,
+        IEnumerable<string> enumValues,
+        Type conversionType,
+        TargetType targetType,
+        string group,
+        bool flagCounter = false,
+        bool hidden = false) : base(
         SpecificationType.Option,
         required,
         min,
@@ -25,18 +38,31 @@ internal sealed class OptionSpecification : Specification
         conversionType == typeof(int) && flagCounter ? TargetType.Switch : targetType,
         hidden)
     {
-        this.ShortName = shortName;
+        ShortName = shortName;
         LongNames = new[] { longName };
-        this.Separator = separator;
-        this.SetName = setName;
-        this.Group = group;
-        this.FlagCounter = flagCounter;
+        Separator = separator;
+        SetName = setName;
+        Group = group;
+        FlagCounter = flagCounter;
     }
 
-    public OptionSpecification(string shortName, string[] longNames, bool required, string setName, Maybe<int> min,
-        Maybe<int> max, char separator, Maybe<object> defaultValue, string helpText, string metaValue,
-        IEnumerable<string> enumValues, Type conversionType, TargetType targetType, string group,
-        bool flagCounter = false, bool hidden = false) : base(
+    public OptionSpecification(
+        string shortName,
+        string[] longNames,
+        bool required,
+        string setName,
+        Maybe<int> min,
+        Maybe<int> max,
+        char separator,
+        Maybe<object> defaultValue,
+        string helpText,
+        string metaValue,
+        IEnumerable<string> enumValues,
+        Type conversionType,
+        TargetType targetType,
+        string group,
+        bool flagCounter = false,
+        bool hidden = false) : base(
         SpecificationType.Option,
         required,
         min,
@@ -49,12 +75,12 @@ internal sealed class OptionSpecification : Specification
         conversionType == typeof(int) && flagCounter ? TargetType.Switch : targetType,
         hidden)
     {
-        this.ShortName = shortName;
-        this.LongNames = longNames;
-        this.Separator = separator;
-        this.SetName = setName;
-        this.Group = group;
-        this.FlagCounter = flagCounter;
+        ShortName = shortName;
+        LongNames = longNames;
+        Separator = separator;
+        SetName = setName;
+        Group = group;
+        FlagCounter = flagCounter;
     }
 
     public static OptionSpecification

@@ -9,10 +9,6 @@ namespace CommandLine.Core;
 internal static class SpecificationPropertyRules
 {
     public static IEnumerable<Func<IEnumerable<SpecificationProperty>, IEnumerable<Error>>>
-        Lookup(IEnumerable<Token> tokens) =>
-        Lookup(tokens, false);
-
-    public static IEnumerable<Func<IEnumerable<SpecificationProperty>, IEnumerable<Error>>>
         Lookup(IEnumerable<Token> tokens, bool allowMultiInstance) =>
         new List<Func<IEnumerable<SpecificationProperty>, IEnumerable<Error>>>
         {

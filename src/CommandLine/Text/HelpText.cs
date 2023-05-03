@@ -50,42 +50,25 @@ public class HelpText
     }
 
 
-    public Comparison<ComparableOption>? OptionComparison { get; set; } = null;
+    public Comparison<ComparableOption>? OptionComparison { get; set; }
 
-    public static Comparison<ComparableOption> RequiredThenAlphaComparison = (ComparableOption attr1, ComparableOption attr2) =>
+    public static readonly Comparison<ComparableOption> RequiredThenAlphaComparison = (
+        attr1,
+        attr2) =>
     {
-        if (attr1.IsOption && attr2.IsOption)
+        return (attr1.IsOption, attr2.IsOption, attr1.Required, attr2.Required) switch
         {
-            if (attr1.Required && !attr2.Required)
-            {
-                return -1;
-            }
-            else if (!attr1.Required && attr2.Required)
-            {
-                return 1;
-            }
-
-            if (attr1.LongNames.Length != attr2.LongNames.Length)
-            {
-                return attr1.LongNames.Length.CompareTo(attr2.LongNames.Length);
-            }
-
-            for (int i = 0; i < attr1.LongNames.Length; i++)
-            {
-                var cmp = String.Compare(attr1.LongNames[i], attr2.LongNames[i], StringComparison.Ordinal);
-                if (cmp != 0) return cmp;
-            }
-               
-            return 0;
-        }
-        else if (attr1.IsOption && attr2.IsValue)
-        {
-            return -1;
-        }
-        else
-        {
-            return 1;
-        }
+            (true, true, true, false) => -1,
+            (true, true, false, true) => 1,
+            (true, true, _, _) => attr1.LongNames.Length != attr2.LongNames.Length
+                ? attr1.LongNames.Length.CompareTo(attr2.LongNames.Length)
+                : attr1.LongNames.Select(
+                    (
+                        t,
+                        i) => string.Compare(t, attr2.LongNames[i], StringComparison.Ordinal))
+                .FirstOrDefault(cmp => cmp != 0),
+            _ => attr1.IsOption && attr2.IsValue ? -1 : 1
+        };
     };
 
     #endregion
@@ -205,8 +188,8 @@ public class HelpText
         this.sentenceBuilder = sentenceBuilder;
         this.heading = heading;
         this.copyright = copyright;
-        this.autoHelp = true;
-        this.autoVersion = true;
+        autoHelp = true;
+        autoVersion = true;
     }
 
     /// <summary>

@@ -9,9 +9,9 @@ internal class TypeDescriptor
 {
     private TypeDescriptor(TargetType targetType, Maybe<int> maxItems, Maybe<TypeDescriptor>? nextValue = null)
     {
-        this.TargetType = targetType;
-        this.MaxItems = maxItems;
-        this.NextValue = nextValue ?? Maybe.Nothing<TypeDescriptor>();
+        TargetType = targetType;
+        MaxItems = maxItems;
+        NextValue = nextValue ?? Maybe.Nothing<TypeDescriptor>();
     }
 
     public TargetType TargetType { get; }

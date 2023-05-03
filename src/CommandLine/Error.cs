@@ -120,8 +120,8 @@ public abstract class Error : IEquatable<Error>
     /// <param name="stopsProcessing">Tells if error stops parsing process.</param>
     protected internal Error(ErrorType tag, bool stopsProcessing)
     {
-        this.Tag = tag;
-        this.StopsProcessing = stopsProcessing;
+        Tag = tag;
+        StopsProcessing = stopsProcessing;
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ public abstract class TokenError : Error, IEquatable<TokenError>
     {
         if (token == null) throw new ArgumentNullException("token");
 
-        this.Token = token;
+        Token = token;
     }
 
     /// <summary>
@@ -266,7 +266,10 @@ public abstract class NamedError : Error, IEquatable<NamedError>
     /// </summary>
     /// <param name="tag">Error type.</param>
     /// <param name="nameInfo">Problematic name.</param>
-    protected internal NamedError(ErrorType tag, NameInfo nameInfo) : base(tag) => this.NameInfo = nameInfo;
+    protected internal NamedError(
+        ErrorType tag,
+        NameInfo nameInfo) : base(tag) =>
+        NameInfo = nameInfo;
 
     /// <summary>
     ///     Name information relative to this error instance.
@@ -355,7 +358,7 @@ public sealed class MutuallyExclusiveSetError : NamedError
     internal MutuallyExclusiveSetError(NameInfo nameInfo, string setName) : base(
         ErrorType.MutuallyExclusiveSetError,
         nameInfo) =>
-        this.SetName = setName;
+        SetName = setName;
 
     /// <summary>
     ///     Option's set name.
@@ -424,7 +427,7 @@ public sealed class HelpVerbRequestedError : Error
     {
         Verb = verb;
         Type = type;
-        this.Matched = matched;
+        Matched = matched;
     }
 
     /// <summary>
@@ -489,7 +492,7 @@ public sealed class SetValueExceptionError : NamedError
         nameInfo)
     {
         Exception = exception;
-        this.Value = value;
+        Value = value;
     }
 
     /// <summary>
@@ -522,8 +525,8 @@ public sealed class MissingGroupOptionError : Error, IEquatable<Error>, IEquatab
     internal MissingGroupOptionError(string group, IEnumerable<NameInfo> names) : base(
         ErrorType.MissingGroupOptionError)
     {
-        this.Group = group;
-        this.Names = names;
+        Group = group;
+        Names = names;
     }
 
     public string Group { get; }

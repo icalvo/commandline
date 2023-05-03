@@ -10,9 +10,9 @@ internal class SpecificationProperty
 {
     private SpecificationProperty(Specification specification, PropertyInfo property, Maybe<object> value)
     {
-        this.Property = property;
-        this.Specification = specification;
-        this.Value = value;
+        Property = property;
+        Specification = specification;
+        Value = value;
     }
 
     public static SpecificationProperty Create(Specification specification, PropertyInfo property, Maybe<object> value)

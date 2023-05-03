@@ -18,8 +18,8 @@ public sealed class OptionAttribute : BaseAttribute
         if (shortName == null) throw new ArgumentNullException("shortName");
         if (longNames == null) throw new ArgumentNullException("longNames");
 
-        this.ShortName = shortName;
-        this.LongNames = longNames;
+        ShortName = shortName;
+        LongNames = longNames;
         setName = string.Empty;
         Separator = '\0';
     }

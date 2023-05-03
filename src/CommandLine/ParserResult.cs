@@ -11,7 +11,7 @@ public sealed class TypeInfo
     private TypeInfo(Type? current, IEnumerable<Type> choices)
     {
         Current = current;
-        this.Choices = choices;
+        Choices = choices;
     }
 
     public Type? Current { get; }
@@ -52,7 +52,7 @@ public abstract class ParserResult<T>
     internal ParserResult(IEnumerable<Error> errors, TypeInfo typeInfo)
     {
         Tag = ParserResultType.NotParsed;
-        this.TypeInfo = typeInfo ?? TypeInfo.Create(typeof(T));
+        TypeInfo = typeInfo ?? TypeInfo.Create(typeof(T));
         Errors = errors ?? new Error[0];
         Value = default;
     }
@@ -61,7 +61,7 @@ public abstract class ParserResult<T>
     {
         Value = value ?? throw new ArgumentNullException(nameof(value));
         Tag = ParserResultType.Parsed;
-        this.TypeInfo = typeInfo ?? TypeInfo.Create(value.GetType());
+        TypeInfo = typeInfo ?? TypeInfo.Create(value.GetType());
         Errors = new Error[0];
     }
 

@@ -21,7 +21,7 @@ public sealed class NameInfo : IEquatable<NameInfo>
         if (shortName == null) throw new ArgumentNullException("shortName");
 
         LongNames = new string[0];
-        this.ShortName = shortName;
+        ShortName = shortName;
     }
 
     internal NameInfo(string shortName, string longName)
@@ -33,7 +33,7 @@ public sealed class NameInfo : IEquatable<NameInfo>
         else
             LongNames = new[] { longName };
 
-        this.ShortName = shortName;
+        ShortName = shortName;
     }
 
     internal NameInfo(string shortName, string[] longNames)
@@ -41,8 +41,8 @@ public sealed class NameInfo : IEquatable<NameInfo>
         if (shortName == null) throw new ArgumentNullException("shortName");
         if (longNames == null) throw new ArgumentNullException("longNames");
         if (longNames.Any(x => x == null)) throw new ArgumentNullException("longNames");
-        this.LongNames = longNames;
-        this.ShortName = shortName;
+        LongNames = longNames;
+        ShortName = shortName;
     }
 
     /// <summary>
