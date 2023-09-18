@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using CommandLine.Infrastructure;
-using SharpX;
+using CSharpx;
 
 namespace CommandLine.Text;
 

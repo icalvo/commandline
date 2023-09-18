@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine.Infrastructure;
-using SharpX;
+using CSharpx;
+using RailwaySharp.ErrorHandling;
 
 namespace CommandLine.Core;
 
@@ -18,7 +19,7 @@ internal static class ValueMapper
 
         return Result.Succeed(
             propAndErrors.Select(pe => pe.Item1),
-            propAndErrors.Select(pe => pe.Item2).OnlyJust());
+            propAndErrors.Select(pe => pe.Item2).OfType<Just<Error>>().Select(e => e.Value));
     }
 
     private static IEnumerable<Tuple<SpecificationProperty, Maybe<Error>>> MapValuesImpl(
@@ -34,7 +35,7 @@ internal static class ValueMapper
             yield break;
         }
 
-        var next = specProps.Skip(1).FirstOrDefault(s => s.Specification.IsValue()).AsMaybe();
+        var next = specProps.Skip(1).FirstOrDefault(s => s.Specification.IsValue()).ToMaybe();
         if (pt.Specification.Max.IsJust() && next.IsNothing() && values.Skip(taken.Count()).Any())
         {
             yield return Tuple.Create<SpecificationProperty, Maybe<Error>>(

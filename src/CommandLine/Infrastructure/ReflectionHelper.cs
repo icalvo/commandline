@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CommandLine.Core;
-using SharpX;
+using CSharpx;
 
 namespace CommandLine.Infrastructure;
 

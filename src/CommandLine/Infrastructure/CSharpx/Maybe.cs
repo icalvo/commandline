@@ -3,13 +3,166 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using SharpX;
 
-namespace CommandLine;
+namespace CSharpx;
+
+#region Maybe Type
 
 /// <summary>
-///     Provides convenience extension methods for <see cref="Maybe" />.
+///     Discriminator for <see cref="CSharpx.Maybe" />.
+/// </summary>
+#if !CSX_MAYBE_INTERNAL
+    public
+#endif
+internal enum MaybeType
+{
+    Just,
+    Nothing
+}
+
+/// <summary>
+///     The Maybe type models an optional value. A value of type Maybe a either contains a value of type a (represented as
+///     Just a),
+///     or it is empty (represented as Nothing).
+/// </summary>
+#if !CSX_MAYBE_INTERNAL
+    public
+#endif
+internal abstract class Maybe<T>
+{
+    protected Maybe(MaybeType tag) => this.Tag = tag;
+
+    /// <summary>
+    ///     Type discriminator.
+    /// </summary>
+    public MaybeType Tag { get; }
+
+    #region Basic Match Methods
+
+    /// <summary>
+    ///     Matches a value returning <c>true</c> and value itself via output parameter.
+    /// </summary>
+    public bool MatchJust([NotNullWhen(true)] out T? value)
+    {
+        value = Tag == MaybeType.Just ? ((Just<T>)this).Value : default;
+        return Tag == MaybeType.Just;
+    }
+
+    /// <summary>
+    ///     Matches an empty value returning <c>true</c>.
+    /// </summary>
+    public bool MatchNothing() => Tag == MaybeType.Nothing;
+
+    #endregion
+}
+
+#endregion
+
+/// <summary>
+///     Models a <see cref="CSharpx.Maybe" /> when in empty state.
+/// </summary>
+#if !CSX_MAYBE_INTERNAL
+    public
+#endif
+internal sealed class Nothing<T> : Maybe<T>
+{
+    internal Nothing() : base(MaybeType.Nothing)
+    {
+    }
+}
+
+/// <summary>
+///     Models a <see cref="CSharpx.Maybe" /> when contains a value.
+/// </summary>
+#if !CSX_MAYBE_INTERNAL
+    public
+#endif
+internal sealed class Just<T> : Maybe<T>
+{
+    internal Just(T value) : base(MaybeType.Just) => this.Value = value;
+
+    /// <summary>
+    ///     The wrapped value.
+    /// </summary>
+    public T Value { get; }
+}
+
+/// <summary>
+///     Provides static methods for manipulating <see cref="CSharpx.Maybe" />.
+/// </summary>
+#if !CSX_MAYBE_INTERNAL
+    public
+#endif
+internal static class Maybe
+{
+    #region Value Case Constructors
+
+    /// <summary>
+    ///     Builds the empty case of <see cref="CSharpx.Maybe" />.
+    /// </summary>
+    public static Maybe<T> Nothing<T>() => new Nothing<T>();
+
+    /// <summary>
+    ///     Builds the case when <see cref="CSharpx.Maybe" /> contains a value.
+    /// </summary>
+    public static Just<T> Just<T>(T value) => new(value);
+
+    #endregion
+
+    #region Monad
+
+    /// <summary>
+    ///     Inject a value into the monadic <see cref="CSharpx.Maybe{T}" /> type.
+    /// </summary>
+    public static Maybe<T> Return<T>(T? value) => value == null ? Nothing<T>() : Just(value);
+
+    /// <summary>
+    ///     Sequentially compose two actions, passing any value produced by the first as an argument to the second.
+    /// </summary>
+    public static Maybe<T2> Bind<T1, T2>(Maybe<T1> maybe, Func<T1, Maybe<T2>> func) =>
+        maybe.MatchJust(out T1? value1) ? func(value1) : Nothing<T2>();
+
+    #endregion
+
+    #region Functor
+
+    /// <summary>
+    ///     Transforms an maybe value by using a specified mapping function.
+    /// </summary>
+    public static Maybe<T2> Map<T1, T2>(Maybe<T1> maybe, Func<T1, T2> func) =>
+        maybe.MatchJust(out T1? value1) ? Just(func(value1)) : Nothing<T2>();
+
+    #endregion
+
+    /// <summary>
+    ///     If both maybes contain a value, it merges them into a maybe with a tupled value.
+    /// </summary>
+    public static Maybe<Tuple<T1, T2>> Merge<T1, T2>(Maybe<T1> first, Maybe<T2> second)
+    {
+        T1? value1;
+        T2? value2;
+        if (first.MatchJust(out value1) && second.MatchJust(out value2)) return Just(Tuple.Create(value1, value2));
+        return Nothing<Tuple<T1, T2>>();
+    }
+
+#if !CSX_REM_EITHER_FUNC
+        /// <summary>
+        /// Maps Either Right value to Maybe Just, otherwise Maybe Nothing.
+        /// </summary>
+        public static Maybe<TRight> FromEither<TLeft, TRight>(Either<TLeft, TRight> either)
+        {
+            if (either.Tag == EitherType.Right) {
+                return Maybe.Just(((Right<TLeft, TRight>)either).Value);
+            }
+            return Maybe.Nothing<TRight>();
+        }
+#endif
+}
+
+/// <summary>
+///     Provides convenience extension methods for <see cref="CSharpx.Maybe" />.
 /// </summary>
 #if !CSX_MAYBE_INTERNAL
     public
@@ -72,10 +225,10 @@ internal static class MaybeExtensions
     #endregion
 
     /// <summary>
-    ///     Equivalent to monadic <see cref="Maybe.Return{T}" /> operation.
+    ///     Equivalent to monadic <see cref="CSharpx.Maybe.Return{T}" /> operation.
     ///     Builds a <see cref="CSharpx.Just{T}" /> value in case <paramref name="value" /> is different from its default.
     /// </summary>
-    public static Maybe<T> AsMaybe<T>(this T? value) => value == null ? Maybe.Nothing<T>() : Maybe.Return(value);
+    public static Maybe<T> ToMaybe<T>(this T? value) => Maybe.Return(value);
 
     /// <summary>
     ///     Invokes a function on this maybe value that itself yields a maybe.
@@ -120,7 +273,7 @@ internal static class MaybeExtensions
     /// <summary>
     ///     If contans a value executes an <see cref="System.Action{T1, T2}" /> delegate over it.
     /// </summary>
-    public static void Do<T1, T2>(this Maybe<(T1, T2)> maybe, Action<T1?, T2?> action)
+    public static void Do<T1, T2>(this Maybe<Tuple<T1, T2>> maybe, Action<T1?, T2?> action)
     {
         T1? value1;
         T2? value2;
@@ -168,12 +321,6 @@ internal static class MaybeExtensions
 
         throw exceptionToThrow?.Invoke() ?? new ArgumentException("Value empty.");
     }
-
-    /// <summary>
-    ///     If contains a values returns  it, otherwise returns <paramref name="noneValue" />.
-    /// </summary>
-    public static T? GetValueOrNull<T>(this Maybe<T> maybe) where T : class =>
-        maybe.MatchJust(out T? value) ? value : null;
 
     /// <summary>
     ///     If contains a values returns  it, otherwise returns <paramref name="noneValue" />.

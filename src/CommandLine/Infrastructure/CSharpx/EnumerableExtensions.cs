@@ -10,10 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using SharpX;
 using LinqEnumerable = System.Linq.Enumerable;
 
-namespace CommandLine;
+namespace CSharpx;
 #if !CSX_ENUM_INTERNAL
     public
 #endif
@@ -34,7 +33,7 @@ internal static class EnumerableExtensions
     /// <summary>
     ///     Turns an empty sequence to Nothing, otherwise Just(sequence).
     /// </summary>
-    public static Maybe<IEnumerable<T>> AsMaybe<T>(this IEnumerable<T> source)
+    public static Maybe<IEnumerable<T>> ToMaybe<T>(this IEnumerable<T> source)
     {
         using (var e = source.GetEnumerator())
         {
@@ -349,7 +348,8 @@ internal static class EnumerableExtensions
     /// <summary>
     ///     Captures current state of a sequence.
     /// </summary>
-    public static T[] Memoize<T>(this IEnumerable<T> source) => source.ToArray();
+    public static IEnumerable<T> Memoize<T>(this IEnumerable<T> source) =>
+        source.GetType().IsArray ? source : source.ToArray();
 
     /// <summary>
     ///     Creates an immutable copy of a sequence.

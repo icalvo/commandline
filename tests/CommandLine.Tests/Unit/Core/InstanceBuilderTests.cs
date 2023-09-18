@@ -7,8 +7,8 @@ using System.Linq;
 using CommandLine.Core;
 using CommandLine.Infrastructure;
 using CommandLine.Tests.Fakes;
+using CSharpx;
 using FluentAssertions;
-using SharpX;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core;

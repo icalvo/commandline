@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using CommandLine.Infrastructure;
-using SharpX;
+using CSharpx;
 
 namespace CommandLine;
 

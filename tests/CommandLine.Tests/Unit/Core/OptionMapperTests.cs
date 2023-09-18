@@ -6,7 +6,8 @@ using System.Globalization;
 using System.Linq;
 using CommandLine.Core;
 using CommandLine.Tests.Fakes;
-using SharpX;
+using CSharpx;
+using RailwaySharp.ErrorHandling;
 using Xunit;
 #if PLATFORM_DOTNET
 using System.Reflection;
@@ -61,7 +62,7 @@ public class OptionMapperTests
         Assert.NotNull(
             ((Ok<IEnumerable<SpecificationProperty>, Error>)result).Success.Single(
                 a => a.Specification.IsOption() && ((OptionSpecification)a.Specification).ShortName.Equals("x") &&
-                     a.Value.Match(o => o is true, false)));
+                     (bool)((Just<object>)a.Value).Value));
 
         // Teardown
     }

@@ -6,7 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using CommandLine.Infrastructure;
-using SharpX;
+using CSharpx;
+using RailwaySharp.ErrorHandling;
 
 namespace CommandLine.Core;
 
@@ -28,7 +29,7 @@ internal static class TypeConverter
 
         return converted.Any(a => a.MatchNothing())
             ? Maybe.Nothing<object>()
-            : Maybe.Just(converted.OnlyJust().ToUntypedArray(type));
+            : Maybe.Just(converted.Select(c => ((Just<object>)c).Value).ToUntypedArray(type));
     }
 
     private static Maybe<object> ChangeTypeScalar(string value, Type conversionType, CultureInfo conversionCulture,

@@ -2,7 +2,7 @@
 
 using System;
 using System.Reflection;
-using SharpX;
+using CSharpx;
 
 namespace CommandLine.Core;
 

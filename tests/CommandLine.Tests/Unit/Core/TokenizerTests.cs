@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine.Core;
+using CSharpx;
 using FluentAssertions;
-using SharpX;
+using RailwaySharp.ErrorHandling;
 using Xunit;
 
 namespace CommandLine.Tests.Unit.Core;
@@ -31,7 +32,7 @@ public class TokenizerTests
                 Maybe.Nothing<int>(),
                 Maybe.Nothing<int>(),
                 ',',
-                Maybe.Nothing<object>(),
+                null,
                 string.Empty,
                 string.Empty,
                 new List<string>(),
@@ -76,7 +77,7 @@ public class TokenizerTests
                 Maybe.Nothing<int>(),
                 Maybe.Nothing<int>(),
                 ',',
-                Maybe.Nothing<object>(),
+                null,
                 string.Empty,
                 string.Empty,
                 new List<string>(),

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CommandLine.Infrastructure;
-using SharpX;
+using CSharpx;
+using RailwaySharp.ErrorHandling;
 
 namespace CommandLine.Core;
 
@@ -93,7 +94,7 @@ internal static class Tokenizer
         var indexes = from i in tokens.Select(
                 (t, i) =>
                 {
-                    var prev = tokens.ElementAtOrDefault(i - 1).AsMaybe();
+                    var prev = tokens.ElementAtOrDefault(i - 1).ToMaybe();
                     return t.IsValue() && ((Value)t).ExplicitlyAssigned && prev.MapValueOrDefault(
                         p => p.IsName() && !nameLookup(p.Text),
                         false)
