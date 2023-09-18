@@ -44,8 +44,8 @@ public class Parser : IDisposable
 
     internal Parser(ParserSettings settings)
     {
-        Settings = settings;
-        Settings.Consumed = true;
+        this.Settings = settings;
+        this.Settings.Consumed = true;
     }
 
     /// <summary>

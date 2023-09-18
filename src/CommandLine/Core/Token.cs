@@ -14,8 +14,8 @@ internal abstract class Token
 {
     protected Token(TokenType tag, string text)
     {
-        Tag = tag;
-        Text = text;
+        this.Tag = tag;
+        this.Text = text;
     }
 
     public static Token Name(string text) => new Name(text);
@@ -69,9 +69,9 @@ internal class Value : Token, IEquatable<Value>
 
     public Value(string text, bool explicitlyAssigned, bool forced, bool fromSeparator) : base(TokenType.Value, text)
     {
-        ExplicitlyAssigned = explicitlyAssigned;
-        Forced = forced;
-        FromSeparator = fromSeparator;
+        this.ExplicitlyAssigned = explicitlyAssigned;
+        this.Forced = forced;
+        this.FromSeparator = fromSeparator;
     }
 
     /// <summary>

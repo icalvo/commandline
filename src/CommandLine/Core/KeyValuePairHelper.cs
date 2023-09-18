@@ -20,13 +20,10 @@ internal static class KeyValuePairHelper
 
     public static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ForSequence(IEnumerable<Token> tokens)
     {
-        var tokensArray = tokens.Memoize();
-        return from t in tokensArray.Pairwise(
-                (
-                    f,
-                    _) => f.IsName()
+        return from t in tokens.Pairwise(
+                (f, s) => f.IsName()
                     ? f.Text.ToKeyValuePair(
-                        tokensArray.SkipWhile(t => !t.Equals(f)).SkipWhile(t => t.Equals(f)).TakeWhile(v => v.IsValue())
+                        tokens.SkipWhile(t => !t.Equals(f)).SkipWhile(t => t.Equals(f)).TakeWhile(v => v.IsValue())
                             .Select(x => x.Text).ToArray())
                     : string.Empty.ToKeyValuePair())
             where t.Key.Length > 0 && t.Value.Any()

@@ -10,15 +10,17 @@ internal static class ArgumentsExtensions
 {
     public static IEnumerable<Error> Preprocess(
         this IEnumerable<string> arguments,
-        IEnumerable<Func<IEnumerable<string>, IEnumerable<Error>>> preprocessorLookup)
+        IEnumerable<
+            Func<IEnumerable<string>, IEnumerable<Error>>
+        > preprocessorLookup)
     {
-        var argsArray = arguments.Memoize();
-        var lookupArray = preprocessorLookup.Memoize();
-        return lookupArray.TryHead().MapValueOrDefault(
+        return preprocessorLookup.TryHead().MapValueOrDefault(
             func =>
             {
-                var errors = func(argsArray).Memoize();
-                return errors.Any() ? errors : argsArray.Preprocess(lookupArray.TailNoFail());
+                var errors = func(arguments);
+                return errors.Any()
+                    ? errors
+                    : arguments.Preprocess(preprocessorLookup.TailNoFail());
             },
             Enumerable.Empty<Error>());
     }

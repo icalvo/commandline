@@ -13,8 +13,7 @@ internal static class GetoptTokenizer
         Func<string, NameLookupResult> nameLookup) =>
         Tokenize(arguments, nameLookup, false, true, false);
 
-    private static Result<IEnumerable<Token>, Error> Tokenize(
-        IEnumerable<string> arguments,
+    public static Result<IEnumerable<Token>, Error> Tokenize(IEnumerable<string> arguments,
         Func<string, NameLookupResult> nameLookup, bool ignoreUnknownArguments, bool allowDashDash, bool posixlyCorrect)
     {
         var errors = new List<Error>();
@@ -184,11 +183,11 @@ internal static class GetoptTokenizer
     private static IEnumerable<Token> TokenizeLongName(string arg, Func<string, NameLookupResult> nameLookup,
         Action<string> onBadFormatToken, Action<string> onUnknownOption, Action<int> onConsumeNext)
     {
-        var parts = arg[2..].Split(new[] { '=' }, 2);
+        var parts = arg.Substring(2).Split(new[] { '=' }, 2);
         var name = parts[0];
         var value = parts.Length > 1 ? parts[1] : null;
         // A parameter like "--stringvalue=" is acceptable, and makes stringvalue be the empty string
-        if (string.IsNullOrWhiteSpace(name) || name.Contains(' '))
+        if (string.IsNullOrWhiteSpace(name) || name.Contains(" "))
         {
             onBadFormatToken(arg);
             yield break;
@@ -208,7 +207,6 @@ internal static class GetoptTokenizer
                     yield return Token.Value(value);
                 break;
 
-            case NameLookupResult.BooleanOptionFound:
             default:
                 yield return Token.Name(name);
                 break;

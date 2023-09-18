@@ -23,8 +23,8 @@ internal sealed class ValueSpecification : Specification
         targetType,
         hidden)
     {
-        Index = index;
-        MetaName = metaName;
+        this.Index = index;
+        this.MetaName = metaName;
     }
 
     public static ValueSpecification

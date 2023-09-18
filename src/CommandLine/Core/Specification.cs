@@ -28,17 +28,17 @@ internal abstract class Specification
         Maybe<object> defaultValue, string helpText, string metaValue, IEnumerable<string> enumValues,
         Type conversionType, TargetType targetType, bool hidden = false)
     {
-        Tag = tag;
-        Required = required;
-        Min = min;
-        Max = max;
-        DefaultValue = defaultValue;
-        ConversionType = conversionType;
-        TargetType = targetType;
-        HelpText = helpText;
-        MetaValue = metaValue;
-        EnumValues = enumValues;
-        Hidden = hidden;
+        this.Tag = tag;
+        this.Required = required;
+        this.Min = min;
+        this.Max = max;
+        this.DefaultValue = defaultValue;
+        this.ConversionType = conversionType;
+        this.TargetType = targetType;
+        this.HelpText = helpText;
+        this.MetaValue = metaValue;
+        this.EnumValues = enumValues;
+        this.Hidden = hidden;
     }
 
     public SpecificationType Tag { get; }

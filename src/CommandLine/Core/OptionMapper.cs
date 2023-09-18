@@ -41,7 +41,7 @@ internal static class OptionMapper
                             isFlag).Select(
                             value => Tuple.Create(pt.WithValue(Maybe.Just(value)), Maybe.Nothing<Error>()))
                         .GetValueOrDefault(
-                            Tuple.Create(
+                            Tuple.Create<SpecificationProperty, Maybe<Error>>(
                                 pt,
                                 Maybe.Just<Error>(
                                     new BadFormatConversionError(

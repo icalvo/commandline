@@ -17,7 +17,7 @@ public sealed class ValueAttribute : BaseAttribute
     /// </summary>
     public ValueAttribute(int index)
     {
-        Index = index;
+        this.Index = index;
         metaName = string.Empty;
     }
 

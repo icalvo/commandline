@@ -19,54 +19,64 @@ internal static class InstanceChooser
         CultureInfo parsingCulture,
         bool autoHelp,
         bool autoVersion,
+        IEnumerable<ErrorType> nonFatalErrors)
+    {
+        return Choose(
+            tokenizer,
+            types,
+            arguments,
+            nameComparer,
+            ignoreValueCase,
+            parsingCulture,
+            autoHelp,
+            autoVersion,
+            false,
+            nonFatalErrors);
+    }
+
+    public static ParserResult<object> Choose(
+        Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
+        IEnumerable<Type> types,
+        IEnumerable<string> arguments,
+        StringComparer nameComparer,
+        bool ignoreValueCase,
+        CultureInfo parsingCulture,
+        bool autoHelp,
+        bool autoVersion,
         bool allowMultiInstance,
         IEnumerable<ErrorType> nonFatalErrors)
     {
-        var argumentsArray = arguments.Memoize();
-        var typesArray = types.Memoize();
-        var verbs = Verb.SelectFromTypes(typesArray).Memoize();
-        var defaultVerbs = verbs.Where(t => t.Item1.IsDefault).Memoize();
-        var defaultVerbCount = defaultVerbs.Length;
+        var verbs = Verb.SelectFromTypes(types);
+        var defaultVerbs = verbs.Where(t => t.Item1.IsDefault);
+
+        int defaultVerbCount = defaultVerbs.Count();
         if (defaultVerbCount > 1)
-            return MakeNotParsed(typesArray, new MultipleDefaultVerbsError());
+            return MakeNotParsed(types, new MultipleDefaultVerbsError());
 
         var defaultVerb = defaultVerbCount == 1 ? defaultVerbs.First() : null;
 
-        ParserResult<object> ChooseAux()
+        ParserResult<object> choose()
         {
-            var firstArg = argumentsArray.First();
+            var firstArg = arguments.First();
 
-            bool PreProcCompare(string command) =>
+            bool preprocCompare(string command) =>
                 nameComparer.Equals(command, firstArg) ||
                 nameComparer.Equals(string.Concat("--", command), firstArg);
 
-            return autoHelp && PreProcCompare("help")
-                ? MakeNotParsed(
-                    typesArray,
+            return (autoHelp && preprocCompare("help"))
+                ? MakeNotParsed(types,
                     MakeHelpVerbRequestedError(verbs,
-                        argumentsArray.Skip(1).FirstOrDefault() ?? string.Empty,
-                        nameComparer))
-                : autoVersion && PreProcCompare("version")
-                    ? MakeNotParsed(typesArray, new VersionRequestedError())
-                    : MatchVerb(
-                        tokenizer,
-                        verbs,
-                        defaultVerb,
-                        argumentsArray,
-                        nameComparer,
-                        ignoreValueCase,
-                        parsingCulture,
-                        autoHelp,
-                        autoVersion,
-                        allowMultiInstance,
-                        nonFatalErrors);
+                        arguments.Skip(1).FirstOrDefault() ?? string.Empty, nameComparer))
+                : (autoVersion && preprocCompare("version"))
+                    ? MakeNotParsed(types, new VersionRequestedError())
+                    : MatchVerb(tokenizer, verbs, defaultVerb, arguments, nameComparer, ignoreValueCase, parsingCulture, autoHelp, autoVersion, allowMultiInstance, nonFatalErrors);
         }
 
-        return argumentsArray.Any()
-            ? ChooseAux()
-            : defaultVerbCount == 1
-                ? MatchDefaultVerb(tokenizer, verbs, defaultVerb, argumentsArray, nameComparer, ignoreValueCase, parsingCulture, autoHelp, autoVersion, nonFatalErrors)
-                : MakeNotParsed(typesArray, new NoVerbSelectedError());
+        return arguments.Any()
+            ? choose()
+            : (defaultVerbCount == 1
+                ? MatchDefaultVerb(tokenizer, verbs, defaultVerb, arguments, nameComparer, ignoreValueCase, parsingCulture, autoHelp, autoVersion, nonFatalErrors)
+                : MakeNotParsed(types, new NoVerbSelectedError()));
     }
 
     private static ParserResult<object> MatchDefaultVerb(
@@ -96,9 +106,8 @@ internal static class InstanceChooser
 
     private static ParserResult<object> MatchVerb(
         Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
-        Tuple<Verb, Type>[] verbs,
-        Tuple<Verb, Type>? defaultVerb,
-        string[] arguments,
+        IEnumerable<Tuple<Verb, Type>> verbs, Tuple<Verb, Type>? defaultVerb,
+        IEnumerable<string> arguments,
         StringComparer nameComparer,
         bool ignoreValueCase,
         CultureInfo parsingCulture,

@@ -26,9 +26,9 @@ public sealed class Example : IEquatable<Example>
         if (formatStyles == null) throw new ArgumentNullException("formatStyles");
         if (sample == null) throw new ArgumentNullException("sample");
 
-        HelpText = helpText;
-        FormatStyles = formatStyles;
-        Sample = sample;
+        this.HelpText = helpText;
+        this.FormatStyles = formatStyles;
+        this.Sample = sample;
     }
 
     /// <summary>
