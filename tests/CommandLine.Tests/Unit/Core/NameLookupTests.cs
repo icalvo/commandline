@@ -15,6 +15,7 @@ public class NameLookupTests
     public void Lookup_name_of_sequence_option_with_separator()
     {
         // Fixture setup
+        var expected = Maybe.Just(".");
         var specs = new[]
         {
             new OptionSpecification(
@@ -37,7 +38,7 @@ public class NameLookupTests
         // Exercize system
         var result = NameLookup.HavingSeparator("string-seq", specs, StringComparer.Ordinal);
         // Verify outcome
-        result.Should().Be(Maybe.Just('.'));
+        expected.Should().BeEquivalentTo(result);
 
         // Teardown
     }
