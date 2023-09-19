@@ -253,7 +253,7 @@ public class InstanceBuilderTests
             arguments);
 
         // Verify outcome
-        expected.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
+        expected.Should().Be(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
     }
 
     [Theory]
@@ -272,7 +272,7 @@ public class InstanceBuilderTests
             arguments);
 
         // Verify outcome
-        expected.Should().BeEquivalentTo(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
+        expected.Should().Be(((Parsed<Simple_Options_With_Enum>)result).Value.Colors);
     }
 
     [Fact]

@@ -630,7 +630,7 @@ public class ParserTests
 
 
         // Verify outcome
-        result.Tag.Should().BeEquivalentTo(ParserResultType.Parsed);
+        result.Tag.Should().Be(ParserResultType.Parsed);
         result.GetType().Should().Be<Parsed<object>>();
         result.TypeInfo.Current.Should().Be<Secert_Verb>();
         ((Parsed<object>)result).Value.Should().BeEquivalentTo(expectedOptions, o => o.RespectingRuntimeTypes());
@@ -651,7 +651,7 @@ public class ParserTests
                 new[] { "secert", "--force", "--secert-option", "shhh" });
 
         // Verify outcome
-        result.Tag.Should().BeEquivalentTo(ParserResultType.Parsed);
+        result.Tag.Should().Be(ParserResultType.Parsed);
         result.GetType().Should().Be<Parsed<object>>();
         result.TypeInfo.Current.Should().Be<Secert_Verb>();
         ((Parsed<object>)result).Value.Should().BeEquivalentTo(expectedOptions, o => o.RespectingRuntimeTypes());
@@ -699,7 +699,7 @@ public class ParserTests
         var result = sut.ParseArguments<Simple_Options>(arguments);
 
         // Verify outcome
-        result.Tag.Should().BeEquivalentTo(ParserResultType.Parsed);
+        result.Tag.Should().Be(ParserResultType.Parsed);
         result.WithParsed(opts => opts.Should().BeEquivalentTo(expected));
 
         // Teardown
@@ -717,7 +717,7 @@ public class ParserTests
         var result = sut.ParseArguments<Add_Verb, Commit_Verb, Clone_Verb>(arguments);
 
         // Verify outcome
-        result.Tag.Should().BeEquivalentTo(ParserResultType.Parsed);
+        result.Tag.Should().Be(ParserResultType.Parsed);
         result.WithParsed(opts => opts.Should().BeEquivalentTo(expected));
 
         // Teardown
